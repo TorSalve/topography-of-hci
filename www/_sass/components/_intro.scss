@@ -39,6 +39,16 @@
       width: 80%;
     }
   }
+  ul {
+    padding: 0.5em 2em 1em 2em;
+    font-size: 1.2rem;
+    font-weight: light;
+    line-height: 1.5;
+    color: $steel;
+    @include media-breakpoint-up(md) {
+      width: 80%;
+    }
+  }
 }
 
 .intro-small {

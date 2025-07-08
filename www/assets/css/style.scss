@@ -2,12 +2,12 @@
 ---
 
 // Colors
-$primary: #e5261f;
-$primary-dark: #a01b16;
-$secondary: #f88379;
+$primary: #c77c4d;
+$primary-dark: #704426;
+$secondary: #704426;
 $black: #2f2f41;
 $white: #ffffff;
-$white-offset: #fff6f8;
+$white-offset: #fcf7f4;
 $steel: #5c5a5a;
 
 // Links
@@ -105,7 +105,7 @@ $sub-footer-text-color: $white;
 // Pages
 @import "pages/page-home";
 @import "pages/page-teams";
-@import "pages/page-service";
+@import "pages/page-topography";
 
 body {
   font-size: 16px;

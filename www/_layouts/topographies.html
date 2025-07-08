@@ -1,0 +1,33 @@
+---
+layout: default
+bodyClass: "page-topographies"
+---
+
+<div class="intro">
+  <div class="container">
+    <div class="row justify-content-start">
+      <div class="col-12">{{ content }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="container pt-6 pb-6">
+  <div class="row">
+    {% for topography in site.topographies %}
+    <div class="col-12 col-md-6 mb-3">
+      <div class="topography topography-summary">
+        <div class="topography-content">
+          <h2 class="topography-title">
+            <a href="{{ topography.url | relative_url }}"
+              >{{ topography.title }}</a
+            >
+          </h2>
+          <p>
+            {{ topography.excerpt | markdownify | strip_html | truncate: 100 }}
+          </p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
