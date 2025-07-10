@@ -1,0 +1,42 @@
+<div class="strip strip-grey">
+  <div class="intro intro-small">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-md-12">
+          <h2 class="title">Downloads the topography</h2>
+        </div>
+        <p>
+          The topography of HCI is available for download in various versions
+          and formats. The topography is available on GitHub, with a CC0
+          lisence.
+        </p>
+        {% for topography in site.topographies %}
+        <div class="col-4 col-md-4">
+          <div class="card topography-card">
+            <img
+              class="card-img-top"
+              src="{{ site.logo.mobile | relative_url }}"
+              alt="Image of {{ topography.title }}"
+            />
+            <div class="card-header">
+              <h3 class="card-title">{{ topography.title }}</h3>
+            </div>
+            <div class="card-body">
+              <p class="card-text">
+                {{ topography.excerpt | markdownify | strip_html | truncate: 100
+                }}
+              </p>
+              <a
+                href="{{ topography.github | default: topography.url }}"
+                class="stretched-link"
+                target="_blank"
+                rel="noopener noreferrer"
+              ></a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>

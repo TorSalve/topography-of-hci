@@ -1,11 +1,14 @@
 main:
-  # - name: "topographies"
-  #   url: "/topographies/"
-  #   weight: 2
+  - name: "Home"
+    url: "/"
+    weight: 1
   # - name: "Team"
   #   url: "/team/"
   #   weight: 3
-  - name: "Find the Topography"
+  - name: "Method"
+    url: "/method/"
+    weight: 2
+  - name: "Downloads"
     url: "/topographies/"
     weight: 3
   - name: "About"
