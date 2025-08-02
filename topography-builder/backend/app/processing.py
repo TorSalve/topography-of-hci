@@ -81,25 +81,33 @@ def _run_blender_processing(input_path, output_path, processing_params=None):
 def _run_trimesh_processing(input_path, output_path, processing_params=None):
     """Run trimesh-based processing to generate topographic map."""
 
-    trimesh_script_path = os.path.join(
-        os.path.dirname(__file__), "processors", "process_mesh_trimesh.py"
-    )
+    try:
+        # Import the trimesh processing functions directly
+        sys.path.append(os.path.dirname(__file__))
+        from .utils.trimesh_utils import load_and_transform_mesh
+        from .processors.process_mesh_trimesh import (
+            generate_contour_lines,
+            render_contour_map,
+        )
 
-    # Build command arguments
-    cmd_args = [
-        sys.executable,  # Use the same Python interpreter
-        trimesh_script_path,
-        input_path,
-        output_path,
-    ]
+        # Load and transform the mesh with processing parameters
+        mesh = load_and_transform_mesh(input_path, processing_params or {})
 
-    # Add processing parameters
-    if processing_params:
-        cmd_args = build_command_args_from_params(processing_params, cmd_args)
+        # Generate contour lines
+        contour_lines = generate_contour_lines(
+            mesh,
+            processing_params.get("contour_levels", 20) if processing_params else 20,
+        )
 
-    result, stdout_text, stderr_text = run_subprocess_with_timeout(
-        cmd_args, timeout=300, engine_name="Trimesh"
-    )
+        # Render the contour map
+        render_contour_map(contour_lines, output_path, mesh.bounds)
+
+        print(f"Generated topographic map: {output_path}")
+
+    except ImportError as e:
+        raise RuntimeError(f"Trimesh dependencies not available: {str(e)}")
+    except Exception as e:
+        raise RuntimeError(f"Trimesh processing failed: {str(e)}")
 
 
 def _cleanup_temp_file(file_path):

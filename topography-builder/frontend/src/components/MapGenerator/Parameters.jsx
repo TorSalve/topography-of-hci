@@ -10,13 +10,13 @@ import {
   formatValue,
   roundToThousandth,
   processInputValue,
-} from "../utils/mathUtils";
+} from "../../utils/mathUtils";
 import {
   createEnterKeyHandler,
   createInputChangeHandler,
   createFocusHandler,
   createBlurHandler,
-} from "../utils/inputUtils";
+} from "../../utils/inputUtils";
 
 const debounce = (func, wait) => {
   let timeout;

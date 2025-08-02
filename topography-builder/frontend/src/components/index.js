@@ -1,9 +1,17 @@
 // Component exports for easier imports
-export { default as FileUpload } from "./FileUpload";
-export { default as ProgressBar } from "./ProgressBar";
+
+// Shared components
 export { default as ErrorMessage } from "./ErrorMessage";
-export { default as LoadingSpinner } from "./LoadingSpinner";
-export { default as ResultImage } from "./ResultImage";
-export { default as Parameters } from "./Parameters";
-export { default as ModelPreview } from "./ModelPreview";
 export { default as Logo } from "./Logo";
+
+// Map Generator components
+export { default as FileUpload } from "./MapGenerator/FileUpload";
+export { default as ProgressBar } from "./MapGenerator/ProgressBar";
+export { default as LoadingSpinner } from "./MapGenerator/LoadingSpinner";
+export { default as ResultImage } from "./MapGenerator/ResultImage";
+export { default as Parameters } from "./MapGenerator/Parameters";
+export { default as ModelPreview } from "./MapGenerator/ModelPreview";
+export { default as MapGenerator } from "./MapGenerator/MapGenerator";
+
+// Map Editor components
+export { default as MapEditor } from "./MapEditor/MapEditor";

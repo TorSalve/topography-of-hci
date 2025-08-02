@@ -5,6 +5,7 @@ const ResultImage = ({
   visible,
   onDownload,
   onDownloadSVG,
+  onEditInEditor,
   originalFileName,
   parameters = {}, // Add parameters for SVG generation
   zBounds = null, // Add zBounds for model height display
@@ -31,6 +32,23 @@ const ResultImage = ({
           Your topographical map has been generated successfully! Choose your
           download format:
         </p>
+
+        {/* Edit in Map Editor Button */}
+        {onEditInEditor && (
+          <div className="edit-in-editor-section">
+            <button
+              className="edit-in-editor-btn"
+              onClick={onEditInEditor}
+              title="Open this map in the map editor for further customization"
+            >
+              ✏️ Edit in Map Editor
+            </button>
+            <p className="edit-info">
+              Open this map in the editor to add colors, labels, and customize
+              the design
+            </p>
+          </div>
+        )}
 
         <div className="download-buttons">
           <button

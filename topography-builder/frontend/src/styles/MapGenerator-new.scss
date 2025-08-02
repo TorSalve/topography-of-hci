@@ -1,0 +1,276 @@
+@use "./variables" as *;
+@use "./components" as *;
+@use "sass:color";
+
+/* MapGenerator Component Styles */
+.map-generator {
+  width: 100%;
+  min-height: 100vh;
+  padding: $spacing-lg;
+  margin: 0 auto;
+  max-width: $container-max-width;
+  background-color: $white-offset;
+}
+
+/* Phase-based Interface - uses shared phase-header from components */
+.phase-container {
+  margin: 0 auto $spacing-2xl auto;
+  width: 100%;
+  background: $white;
+  padding: $spacing-xl;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-medium;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Override phase header for MapGenerator specific styling */
+.map-generator .phase-header {
+  text-align: center;
+  margin-bottom: $spacing-xl;
+  padding-bottom: $spacing-lg;
+  border-bottom: 2px solid $border-color;
+}
+
+.phase-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.map-generator .phase-number {
+  width: 40px;
+  height: 40px;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.phase-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: $text-dark;
+  margin: 0;
+}
+
+.phase-description {
+  color: $text-muted;
+  font-size: 1rem;
+  margin-top: $spacing-sm;
+  line-height: 1.5;
+}
+
+/* Upload Interface - uses shared upload-area from components */
+.upload-section {
+  margin-bottom: $spacing-xl;
+
+  .upload-area {
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .upload-icon {
+      font-size: 3rem;
+      color: $text-muted;
+      margin-bottom: $spacing-md;
+    }
+  }
+}
+
+.file-info {
+  margin-top: $spacing-md;
+  padding: $spacing-md;
+  background: lighten($primary, 45%);
+  border: 1px solid lighten($primary, 35%);
+  border-radius: $border-radius-md;
+
+  .file-name {
+    font-weight: 600;
+    color: $text-dark;
+    margin-bottom: $spacing-xs;
+  }
+
+  .file-details {
+    font-size: 0.9rem;
+    color: $text-muted;
+    display: flex;
+    gap: $spacing-md;
+  }
+}
+
+/* Configuration Section */
+.config-section {
+  margin-bottom: $spacing-xl;
+
+  .config-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: $spacing-lg;
+    margin-bottom: $spacing-lg;
+  }
+
+  .config-item {
+    .config-label {
+      display: block;
+      font-weight: 600;
+      color: $text-dark;
+      margin-bottom: $spacing-sm;
+    }
+
+    .config-input {
+      width: 100%;
+      padding: $spacing-sm $spacing-md;
+      border: 1px solid $border-color;
+      border-radius: $border-radius-sm;
+      font-size: 0.9rem;
+
+      &:focus {
+        outline: none;
+        border-color: $primary;
+        box-shadow: 0 0 0 2px rgba($primary, 0.1);
+      }
+    }
+
+    .config-description {
+      font-size: 0.8rem;
+      color: $text-muted;
+      margin-top: $spacing-xs;
+      line-height: 1.4;
+    }
+  }
+}
+
+/* Processing Section - uses shared loading components */
+.processing-section {
+  text-align: center;
+  padding: $spacing-2xl 0;
+
+  .processing-status {
+    margin-bottom: $spacing-lg;
+
+    .status-text {
+      font-size: 1.1rem;
+      color: $text-dark;
+      margin-bottom: $spacing-sm;
+    }
+
+    .status-detail {
+      color: $text-muted;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+/* Results Section - uses shared card and button components */
+.results-section {
+  .result-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: $spacing-lg;
+    margin-bottom: $spacing-lg;
+  }
+
+  .result-item {
+    .result-title {
+      font-weight: 600;
+      color: $text-dark;
+      margin-bottom: $spacing-sm;
+      text-align: center;
+    }
+
+    .result-preview {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: $border-radius-md;
+      margin-bottom: $spacing-md;
+      border: 1px solid $border-color;
+    }
+  }
+}
+
+/* Action Buttons - uses shared button components */
+.action-section {
+  display: flex;
+  justify-content: center;
+  gap: $spacing-md;
+  margin-top: $spacing-xl;
+
+  @include mobile {
+    flex-direction: column;
+    align-items: center;
+
+    .btn {
+      width: 100%;
+      max-width: 250px;
+    }
+  }
+}
+
+/* Error Display - uses shared error components */
+.error-section {
+  margin: $spacing-lg 0;
+
+  .error-details {
+    margin-top: $spacing-md;
+    padding: $spacing-md;
+    background: lighten($error-color, 45%);
+    border: 1px solid lighten($error-color, 35%);
+    border-radius: $border-radius-md;
+    font-family: monospace;
+    font-size: 0.8rem;
+    white-space: pre-wrap;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+}
+
+/* Navigation */
+.navigation-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: $spacing-xl;
+  padding-top: $spacing-lg;
+  border-top: 1px solid $border-color;
+
+  @include mobile {
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+}
+
+/* Responsive Adjustments */
+@include tablet {
+  .map-generator {
+    padding: $spacing-md;
+  }
+
+  .phase-container {
+    padding: $spacing-lg;
+  }
+
+  .config-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@include mobile {
+  .map-generator {
+    padding: $spacing-sm;
+  }
+
+  .phase-container {
+    padding: $spacing-md;
+  }
+
+  .phase-title {
+    font-size: 1.5rem;
+  }
+
+  .result-grid {
+    grid-template-columns: 1fr;
+  }
+}

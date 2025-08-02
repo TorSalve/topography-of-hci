@@ -1,0 +1,157 @@
+@use "../variables" as *;
+
+/* Button Base Styles */
+.btn {
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  outline: none;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+/* Button Variants */
+.btn-primary {
+  @extend .btn;
+  background: var(--primary);
+  color: var(--white);
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+
+  &:hover:not(:disabled) {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+  }
+}
+
+.btn-secondary {
+  @extend .btn;
+  background: var(--gray-light);
+  color: var(--white);
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+
+  &:hover:not(:disabled) {
+    background: #5a6268;
+  }
+}
+
+.btn-danger {
+  @extend .btn;
+  background: var(--error-color);
+  color: var(--white);
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+
+  &:hover:not(:disabled) {
+    background: #a93226;
+  }
+}
+
+.btn-large {
+  @extend .btn;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-light);
+
+  &:hover:not(:disabled) {
+    box-shadow: var(--shadow-medium);
+  }
+}
+
+/* Specific button implementations */
+.restart-btn {
+  @extend .btn;
+  background: var(--primary);
+  color: var(--white);
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+
+  &:hover:not(:disabled) {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+  }
+}
+
+.reset-btn {
+  @extend .btn;
+  background: var(--gray-light);
+  color: var(--white);
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+
+  &:hover:not(:disabled) {
+    background: #5a6268;
+  }
+}
+
+.process-btn {
+  @extend .btn;
+  background: var(--primary);
+  color: var(--white);
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-light);
+
+  &:hover:not(:disabled) {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-medium);
+  }
+
+  &:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    opacity: 1;
+  }
+}
+
+/* Download buttons */
+.download-btn {
+  @extend .btn;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 140px;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.download-png {
+  @extend .download-btn;
+  background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+  color: white;
+
+  &:hover {
+    background: linear-gradient(135deg, #357abd 0%, #2e6ba8 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+  }
+}
+
+.download-svg {
+  @extend .download-btn;
+  background: linear-gradient(135deg, #50c878 0%, #45b069 100%);
+  color: white;
+
+  &:hover {
+    background: linear-gradient(135deg, #45b069 0%, #3a9a5a 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(80, 200, 120, 0.3);
+  }
+}

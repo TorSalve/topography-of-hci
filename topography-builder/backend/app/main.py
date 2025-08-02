@@ -2,7 +2,7 @@ from fastapi import FastAPI, File, UploadFile, HTTPException, Form
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from app.processing import process_3d_scan, process_3d_scan_svg
-from app.config import Config
+from app.config import server_config, file_config, blender_config
 from app.processors.slice_preview import generate_slice_preview, render_slice_to_svg
 import os
 import tempfile
@@ -44,12 +44,74 @@ async def root():
 
 @app.get("/health")
 async def health_check():
+    dependencies = {}
+
+    # Check trimesh and its dependencies
+    try:
+        import trimesh
+
+        dependencies["trimesh"] = {
+            "status": "available",
+            "version": trimesh.__version__,
+        }
+
+        # Check trimesh's ability to load files
+        try:
+            # Test basic trimesh functionality
+            test_mesh = trimesh.creation.box()
+            dependencies["trimesh"]["mesh_creation"] = "working"
+
+            # Check for optional dependencies
+            try:
+                import scipy
+
+                dependencies["scipy"] = {
+                    "status": "available",
+                    "version": scipy.__version__,
+                }
+            except ImportError:
+                dependencies["scipy"] = {
+                    "status": "missing",
+                    "note": "Required for advanced mesh operations",
+                }
+
+            try:
+                import matplotlib
+
+                dependencies["matplotlib"] = {
+                    "status": "available",
+                    "version": matplotlib.__version__,
+                }
+            except ImportError:
+                dependencies["matplotlib"] = {
+                    "status": "missing",
+                    "note": "Required for contour plotting",
+                }
+
+        except Exception as e:
+            dependencies["trimesh"]["mesh_creation"] = f"error: {str(e)}"
+
+    except ImportError as e:
+        dependencies["trimesh"] = {"status": "missing", "error": str(e)}
+
+    # Check numpy
+    try:
+        import numpy
+
+        dependencies["numpy"] = {"status": "available", "version": numpy.__version__}
+    except ImportError:
+        dependencies["numpy"] = {
+            "status": "missing",
+            "note": "Required for mesh processing",
+        }
+
     return {
         "status": "healthy",
         "configuration": {
             "cors_origins": server_config.CORS_ORIGINS,
             "supported_formats": [".obj", ".fbx", ".stl", ".ply"],
         },
+        "dependencies": dependencies,
     }
 
 

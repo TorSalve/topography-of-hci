@@ -91,20 +91,20 @@ def generate_slice_preview(
         slice_lines = []
 
         if slice_2d is not None:
-            print(f"Slice2D attributes: {dir(slice_2d)}")
+            # print(f"Slice2D attributes: {dir(slice_2d)}")
             # Convert to 2D paths - these represent the contour lines as seen from above
             if hasattr(slice_2d, "entities"):
-                print(f"Found {len(slice_2d.entities)} entities")
+                # print(f"Found {len(slice_2d.entities)} entities")
                 # slice_2d is a Path2D object
                 for i, entity in enumerate(slice_2d.entities):
                     if hasattr(entity, "points"):
                         # Get the actual coordinates
                         points = slice_2d.vertices[entity.points]
-                        print(f"Entity {i}: {len(points)} points")
+                        # print(f"Entity {i}: {len(points)} points")
                         if len(points) > 1:
                             slice_lines.append(points)
             elif hasattr(slice_2d, "vertices"):
-                print(f"Found vertices directly: {len(slice_2d.vertices)} points")
+                # print(f"Found vertices directly: {len(slice_2d.vertices)} points")
                 # slice_2d has vertices directly
                 if len(slice_2d.vertices) > 1:
                     slice_lines.append(slice_2d.vertices)

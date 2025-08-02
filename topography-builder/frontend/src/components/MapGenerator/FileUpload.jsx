@@ -1,25 +1,34 @@
 import React, { useRef } from "react";
-import { FILE_CONFIG } from "../constants/config";
+import { FILE_CONFIG } from "../../constants/config";
 
 const FileUpload = ({ onFileSelect, loading }) => {
   const fileInputRef = useRef(null);
 
   const handleDrop = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     const file = e.dataTransfer.files[0];
     if (file) onFileSelect(file);
   };
 
   const handleDragOver = (e) => {
     e.preventDefault();
+    e.stopPropagation();
   };
 
   const handleFileSelect = (e) => {
+    e.stopPropagation();
     const file = e.target.files[0];
     if (file) onFileSelect(file);
   };
 
-  const handleClick = () => {
+  const handleClick = (e) => {
+    // Prevent click if it's on the input itself
+    if (e.target.type === "file") {
+      return;
+    }
+    e.preventDefault();
+    e.stopPropagation();
     fileInputRef.current?.click();
   };
 
@@ -36,12 +45,19 @@ const FileUpload = ({ onFileSelect, loading }) => {
         pointerEvents: loading ? "none" : "auto",
       }}
     >
-      <p>Drag & drop your file here, or click to select</p>
+      <div className="upload-icon">📁</div>
+      <div className="upload-text">
+        Drag & drop your file here, or click to select
+      </div>
+      <div className="upload-hint">
+        Supported formats: {FILE_CONFIG.SUPPORTED_FORMATS.join(", ")}
+      </div>
       <input
         ref={fileInputRef}
         type="file"
         accept={acceptedFormats}
         onChange={handleFileSelect}
+        style={{ display: "none" }}
       />
     </div>
   );

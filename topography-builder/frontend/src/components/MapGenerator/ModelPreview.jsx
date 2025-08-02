@@ -363,7 +363,7 @@ const ModelPreview = ({
   return (
     <div className="model-preview-container">
       <div className="preview-header">
-        <h3>3D Preview</h3>
+        <h3 className="preview-title">3D Preview</h3>
         <div className="preview-controls">
           <button
             className={`btn-small ${
