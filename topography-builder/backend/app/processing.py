@@ -2,6 +2,8 @@ import subprocess
 import os
 import uuid
 import sys
+from .utils.argparse_utils import build_command_args_from_params
+from .utils.error_utils import run_subprocess_with_timeout, validate_output_file
 
 # Define your local temp folder
 TEMP_FOLDER = os.path.join(os.path.dirname(__file__), "tmp")
@@ -27,7 +29,9 @@ def _save_uploaded_file(file_obj, input_path):
 
 def _run_blender_processing(input_path, output_path, processing_params=None):
     """Run Blender to process the 3D mesh and generate topographic map."""
-    blender_script_path = os.path.join(os.path.dirname(__file__), "process_mesh.py")
+    blender_script_path = os.path.join(
+        os.path.dirname(__file__), "processors", "process_mesh.py"
+    )
 
     # Build command arguments
     cmd_args = [
@@ -69,57 +73,16 @@ def _run_blender_processing(input_path, output_path, processing_params=None):
             ]
         )
 
-    try:
-        result = subprocess.run(
-            cmd_args,
-            capture_output=True,
-            timeout=300,  # 5 minute timeout
-        )
-    except subprocess.TimeoutExpired:
-        raise RuntimeError(
-            "Blender processing timed out after 5 minutes. The file may be too complex or large."
-        )
-    except FileNotFoundError:
-        raise FileNotFoundError(
-            "Blender executable not found. Please ensure Blender is installed and in your system PATH."
-        )
-
-    # Log the output for debugging
-    stdout_text = result.stdout.decode("utf-8", errors="replace")
-    stderr_text = result.stderr.decode("utf-8", errors="replace")
-
-    if result.returncode != 0:
-        # Parse common Blender errors for better user messages
-        if "Could not import" in stderr_text:
-            raise ValueError(
-                f"Failed to import 3D file. The file may be corrupted or in an unsupported format variant."
-            )
-        elif "No objects were imported" in stderr_text:
-            raise ValueError(
-                "The uploaded file appears to be empty or contains no valid 3D geometry."
-            )
-        elif "AttributeError" in stderr_text and "StructRNA" in stderr_text:
-            raise RuntimeError(
-                "Blender internal error occurred during processing. This may be due to complex geometry."
-            )
-        elif "MemoryError" in stderr_text or "memory" in stderr_text.lower():
-            raise RuntimeError(
-                "Insufficient memory to process this file. Try uploading a smaller or less complex 3D model."
-            )
-        elif "permission" in stderr_text.lower():
-            raise PermissionError("File system permission error during processing.")
-        else:
-            print(f"Blender error details: {stderr_text}")
-            raise RuntimeError(
-                f"Blender processing failed with return code {result.returncode}. Check server logs for details."
-            )
+    result, stdout_text, stderr_text = run_subprocess_with_timeout(
+        cmd_args, timeout=300, engine_name="Blender"
+    )
 
 
 def _run_trimesh_processing(input_path, output_path, processing_params=None):
     """Run trimesh-based processing to generate topographic map."""
 
     trimesh_script_path = os.path.join(
-        os.path.dirname(__file__), "process_mesh_trimesh.py"
+        os.path.dirname(__file__), "processors", "process_mesh_trimesh.py"
     )
 
     # Build command arguments
@@ -132,79 +95,11 @@ def _run_trimesh_processing(input_path, output_path, processing_params=None):
 
     # Add processing parameters
     if processing_params:
-        cmd_args.extend(
-            [
-                "--contour-levels",
-                str(processing_params.get("contour_levels", 20)),
-                "--rotation-x",
-                str(processing_params.get("rotation", (0, 0, 0))[0]),
-                "--rotation-y",
-                str(processing_params.get("rotation", (0, 0, 0))[1]),
-                "--rotation-z",
-                str(processing_params.get("rotation", (0, 0, 0))[2]),
-                "--translation-x",
-                str(processing_params.get("translation", (0, 0, 0))[0]),
-                "--translation-y",
-                str(processing_params.get("translation", (0, 0, 0))[1]),
-                "--translation-z",
-                str(processing_params.get("translation", (0, 0, 0))[2]),
-                "--pivot-x",
-                str(processing_params.get("pivot", (0, 0, 0))[0]),
-                "--pivot-y",
-                str(processing_params.get("pivot", (0, 0, 0))[1]),
-                "--pivot-z",
-                str(processing_params.get("pivot", (0, 0, 0))[2]),
-                "--scale",
-                str(processing_params.get("scale", 1.0)),
-                "--line-width",
-                str(processing_params.get("line_width", 0.5)),
-                "--dpi",
-                str(processing_params.get("dpi", 300)),
-            ]
-        )
+        cmd_args = build_command_args_from_params(processing_params, cmd_args)
 
-    try:
-        result = subprocess.run(
-            cmd_args,
-            capture_output=True,
-            timeout=300,  # 5 minute timeout
-        )
-    except subprocess.TimeoutExpired:
-        raise RuntimeError(
-            "Trimesh processing timed out after 5 minutes. The file may be too complex or large."
-        )
-    except FileNotFoundError:
-        raise FileNotFoundError(
-            "Python executable not found or trimesh script missing."
-        )
-
-    # Log the output for debugging
-    stdout_text = result.stdout.decode("utf-8", errors="replace")
-    stderr_text = result.stderr.decode("utf-8", errors="replace")
-
-    if result.returncode != 0:
-        # Parse common trimesh errors for better user messages
-        if "Could not load a valid mesh" in stderr_text:
-            raise ValueError(
-                f"Failed to load 3D file. The file may be corrupted or in an unsupported format."
-            )
-        elif "No contour lines were generated" in stderr_text:
-            raise ValueError(
-                "No contour lines could be generated from this 3D model. Try adjusting the orientation or scale."
-            )
-        elif "ImportError" in stderr_text and "trimesh" in stderr_text:
-            raise RuntimeError(
-                "Trimesh library not available. Please install required dependencies."
-            )
-        elif "MemoryError" in stderr_text or "memory" in stderr_text.lower():
-            raise RuntimeError(
-                "Insufficient memory to process this file. Try uploading a smaller or less complex 3D model."
-            )
-        else:
-            print(f"Trimesh error details: {stderr_text}")
-            raise RuntimeError(
-                f"Trimesh processing failed with return code {result.returncode}. Check server logs for details."
-            )
+    result, stdout_text, stderr_text = run_subprocess_with_timeout(
+        cmd_args, timeout=300, engine_name="Trimesh"
+    )
 
 
 def _cleanup_temp_file(file_path):
@@ -218,8 +113,8 @@ def _run_trimesh_processing_svg(input_path, output_path, processing_params=None)
 
     # Import the trimesh processing functions directly
     sys.path.append(os.path.dirname(__file__))
-    from process_mesh_trimesh import (
-        load_and_transform_mesh,
+    from .utils.trimesh_utils import load_and_transform_mesh
+    from .processors.process_mesh_trimesh import (
         generate_contour_lines,
         render_contour_map_svg,
     )
@@ -283,8 +178,7 @@ def process_3d_scan_svg(file_obj, filename, processing_params=None, engine="trim
         _run_trimesh_processing_svg(input_path, output_path, processing_params)
 
         # Verify output file was created
-        if not os.path.exists(output_path):
-            raise RuntimeError("SVG file was not generated successfully")
+        validate_output_file(output_path, "SVG processing")
 
         print(f"SVG processing completed successfully: {output_path}")
         return output_path
@@ -341,15 +235,7 @@ def process_3d_scan(file_obj, filename, processing_params=None, engine="trimesh"
             raise ValueError(f"Unsupported processing engine: {engine}")
 
         # Verify output file was created
-        if not os.path.exists(output_path):
-            raise RuntimeError(
-                f"{engine.title()} processing completed but no output file was generated. This may indicate an issue with the 3D geometry."
-            )
-
-        if os.path.getsize(output_path) == 0:
-            raise RuntimeError(
-                f"{engine.title()} generated an empty output file. The 3D model may not contain valid geometry for contour generation."
-            )
+        validate_output_file(output_path, engine.title())
 
         # Return the path to the generated topographic map
         return output_path

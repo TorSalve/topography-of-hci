@@ -16,186 +16,14 @@ from matplotlib.collections import LineCollection
 import argparse
 import sys
 from pathlib import Path
-
-
-def normalize_rotation(angle):
-    """Normalize angle to [-180, 180] range"""
-    angle = angle % 360
-    if angle > 180:
-        angle -= 360
-    elif angle < -180:
-        angle += 360
-    return angle
-
-
-def auto_orient_mesh_for_topography(mesh):
-    """
-    Automatically orient the mesh for optimal topographical mapping.
-
-    This function analyzes the mesh and rotates it so that the longest
-    dimension (typically the "height" of the object) aligns with the Z-axis,
-    ensuring the top-down view captures the most interesting contours.
-    """
-    # Get the bounding box dimensions
-    bounds = mesh.bounds
-    dimensions = bounds[1] - bounds[0]  # [width, depth, height]
-
-    # Find which axis has the largest extent
-    max_dimension_axis = np.argmax(dimensions)
-
-    print(
-        f"Original mesh dimensions: X={dimensions[0]:.3f}, Y={dimensions[1]:.3f}, Z={dimensions[2]:.3f}"
-    )
-    print(
-        f"Longest dimension is along axis {max_dimension_axis} ({'XYZ'[max_dimension_axis]})"
-    )
-
-    # If the longest dimension is already along Z, no rotation needed
-    if max_dimension_axis == 2:
-        print("Mesh is already optimally oriented for topography (Z is longest)")
-        return mesh
-
-    # Try different rotation strategies based on which axis is longest
-    if max_dimension_axis == 0:  # X is longest
-        # Skip the initial auto-orientation and just apply the rotation that works
-        print(
-            "Applying 90° X rotation for proper topographical view (based on manual testing)"
-        )
-        rotation_matrix = trimesh.transformations.rotation_matrix(
-            np.radians(90), [1, 0, 0]
-        )
-        mesh.apply_transform(rotation_matrix)
-
-    elif max_dimension_axis == 1:  # Y is longest
-        print("Rotating mesh: Y-axis → Z-axis (90° around X)")
-        rotation_matrix = trimesh.transformations.rotation_matrix(
-            np.radians(90), [1, 0, 0]
-        )
-        mesh.apply_transform(rotation_matrix)
-
-    # Verify the new orientation
-    new_bounds = mesh.bounds
-    new_dimensions = new_bounds[1] - new_bounds[0]
-    print(
-        f"After auto-orientation: X={new_dimensions[0]:.3f}, Y={new_dimensions[1]:.3f}, Z={new_dimensions[2]:.3f}"
-    )
-
-    return mesh
-
-
-def load_and_transform_mesh(input_path, processing_params=None):
-    """
-    Load a 3D mesh file and apply transformations based on processing parameters.
-
-    Args:
-        input_path: Path to the input 3D file
-        processing_params: Dict containing transformation parameters
-
-    Returns:
-        trimesh.Trimesh: The loaded and transformed mesh
-    """
-    if processing_params is None:
-        processing_params = {}
-
-    # Load the mesh
-    print(f"Loading mesh from: {input_path}")
-    mesh = trimesh.load(input_path)
-
-    # Handle different mesh types
-    if isinstance(mesh, trimesh.Scene):
-        if mesh.geometry:
-            mesh = list(mesh.geometry.values())[0]
-        else:
-            raise ValueError("Could not load a valid mesh from the file")
-    elif not isinstance(mesh, trimesh.Trimesh):
-        raise ValueError("Could not load a valid mesh from the file")
-
-    print(
-        f"Successfully loaded mesh with {len(mesh.vertices)} vertices and {len(mesh.faces)} faces"
-    )
-
-    # Apply auto-orientation for topographical mapping
-    mesh = auto_orient_mesh_for_topography(mesh)
-
-    # Apply transformations if specified
-    rotation = processing_params.get("rotation", (0, 0, 0))
-    translation = processing_params.get("translation", (0, 0, 0))
-    pivot = processing_params.get("pivot", (0, 0, 0))
-    scale = processing_params.get("scale", 1.0)
-
-    mesh = apply_transformations(
-        mesh,
-        rotation_x=rotation[0],
-        rotation_y=rotation[1],
-        rotation_z=rotation[2],
-        translation_x=translation[0],
-        translation_y=translation[1],
-        translation_z=translation[2],
-        pivot_x=pivot[0],
-        pivot_y=pivot[1],
-        pivot_z=pivot[2],
-        scale=scale,
-        skip_auto_orient=True,  # Already done above
-    )
-
-    return mesh
-
-
-def apply_transformations(
-    mesh,
-    rotation_x=0,
-    rotation_y=0,
-    rotation_z=0,
-    translation_x=0,
-    translation_y=0,
-    translation_z=0,
-    pivot_x=0,
-    pivot_y=0,
-    pivot_z=0,
-    scale=1.0,
-    skip_auto_orient=False,
-):
-    """Apply transformations to the mesh"""
-
-    # Apply auto-orientation unless explicitly skipped
-    if not skip_auto_orient:
-        mesh = auto_orient_mesh_for_topography(mesh)
-
-    # Center the mesh
-    mesh.vertices -= mesh.centroid
-
-    # Apply pivot translation
-    pivot_point = np.array([pivot_x, pivot_y, pivot_z])
-    mesh.vertices -= pivot_point
-
-    # Apply user-specified rotations (convert degrees to radians)
-    if rotation_x != 0:
-        rotation_matrix_x = trimesh.transformations.rotation_matrix(
-            np.radians(rotation_x), [1, 0, 0]
-        )
-        mesh.apply_transform(rotation_matrix_x)
-
-    if rotation_y != 0:
-        rotation_matrix_y = trimesh.transformations.rotation_matrix(
-            np.radians(rotation_y), [0, 1, 0]
-        )
-        mesh.apply_transform(rotation_matrix_y)
-
-    if rotation_z != 0:
-        rotation_matrix_z = trimesh.transformations.rotation_matrix(
-            np.radians(rotation_z), [0, 0, 1]
-        )
-        mesh.apply_transform(rotation_matrix_z)
-
-    # Apply scale
-    if scale != 1.0:
-        mesh.apply_scale(scale)
-
-    # Apply translation
-    translation = np.array([translation_x, translation_y, translation_z])
-    mesh.vertices += translation
-
-    return mesh
+from ..utils.trimesh_utils import (
+    normalize_rotation,
+    auto_orient_mesh_for_topography,
+    apply_transformations,
+    load_mesh_file,
+    load_and_transform_mesh,
+)
+from ..utils.argparse_utils import parse_processing_args
 
 
 def generate_contour_lines(mesh, num_contours=20):
@@ -410,86 +238,13 @@ def render_contour_map_svg(contour_lines, output_path, mesh_bounds, line_width=1
 def main():
     """Main function to process mesh and generate topographical map"""
 
-    # Set up argument parser
-    parser = argparse.ArgumentParser(
+    # Parse command line arguments using the consolidated utility
+    args = parse_processing_args(
         description="Generate topographical maps from 3D models using trimesh"
     )
-    parser.add_argument("input_path", help="Path to input 3D file")
-    parser.add_argument("output_path", help="Path to output PNG file")
-    parser.add_argument(
-        "--contour-levels",
-        type=int,
-        default=20,
-        help="Number of contour levels (default: 20)",
-    )
-    parser.add_argument(
-        "--rotation-x",
-        type=float,
-        default=0.0,
-        help="Rotation around X axis in degrees (default: 0)",
-    )
-    parser.add_argument(
-        "--rotation-y",
-        type=float,
-        default=0.0,
-        help="Rotation around Y axis in degrees (default: 0)",
-    )
-    parser.add_argument(
-        "--rotation-z",
-        type=float,
-        default=0.0,
-        help="Rotation around Z axis in degrees (default: 0)",
-    )
-    parser.add_argument(
-        "--translation-x",
-        type=float,
-        default=0.0,
-        help="Translation along X axis (default: 0)",
-    )
-    parser.add_argument(
-        "--translation-y",
-        type=float,
-        default=0.0,
-        help="Translation along Y axis (default: 0)",
-    )
-    parser.add_argument(
-        "--translation-z",
-        type=float,
-        default=0.0,
-        help="Translation along Z axis (default: 0)",
-    )
-    parser.add_argument(
-        "--pivot-x",
-        type=float,
-        default=0.0,
-        help="Pivot point X coordinate (default: 0)",
-    )
-    parser.add_argument(
-        "--pivot-y",
-        type=float,
-        default=0.0,
-        help="Pivot point Y coordinate (default: 0)",
-    )
-    parser.add_argument(
-        "--pivot-z",
-        type=float,
-        default=0.0,
-        help="Pivot point Z coordinate (default: 0)",
-    )
-    parser.add_argument(
-        "--scale", type=float, default=1.0, help="Scale factor (default: 1.0)"
-    )
-    parser.add_argument(
-        "--line-width",
-        type=float,
-        default=0.5,
-        help="Contour line width (default: 0.5)",
-    )
-    parser.add_argument(
-        "--dpi", type=int, default=300, help="Output DPI (default: 300)"
-    )
 
-    args = parser.parse_args()
+    # Additional trimesh-specific arguments could be added here if needed
+    # For now, using the standard processing parameters
 
     # Normalize rotation values
     rotation_x = normalize_rotation(args.rotation_x)
@@ -511,35 +266,15 @@ def main():
     print(f"  DPI: {args.dpi}")
 
     try:
-        # Load the mesh
-        print(f"Loading mesh from: {args.input_path}")
-        mesh = trimesh.load(args.input_path)
+        # Load and transform the mesh
+        processing_params = {
+            "rotation": (rotation_x, rotation_y, rotation_z),
+            "translation": (args.translation_x, args.translation_y, args.translation_z),
+            "pivot": (args.pivot_x, args.pivot_y, args.pivot_z),
+            "scale": args.scale,
+        }
 
-        if not isinstance(mesh, trimesh.Trimesh):
-            # Handle case where multiple meshes are loaded
-            if hasattr(mesh, "geometry") and len(mesh.geometry) > 0:
-                mesh = mesh.geometry[list(mesh.geometry.keys())[0]]
-            else:
-                raise ValueError("Could not load a valid mesh from the file")
-
-        print(
-            f"Loaded mesh with {len(mesh.vertices)} vertices and {len(mesh.faces)} faces"
-        )
-
-        # Apply transformations
-        mesh = apply_transformations(
-            mesh,
-            rotation_x,
-            rotation_y,
-            rotation_z,
-            args.translation_x,
-            args.translation_y,
-            args.translation_z,
-            args.pivot_x,
-            args.pivot_y,
-            args.pivot_z,
-            args.scale,
-        )
+        mesh = load_and_transform_mesh(args.input_path, processing_params)
 
         # Generate contour lines
         contour_lines = generate_contour_lines(mesh, args.contour_levels)

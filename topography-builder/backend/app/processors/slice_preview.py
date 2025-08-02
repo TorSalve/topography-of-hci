@@ -15,123 +15,12 @@ from matplotlib.collections import LineCollection
 import io
 import base64
 from pathlib import Path
-
-
-def normalize_rotation(angle):
-    """Normalize angle to [-180, 180] range"""
-    angle = angle % 360
-    if angle > 180:
-        angle -= 360
-    elif angle < -180:
-        angle += 360
-    return angle
-
-
-def auto_orient_mesh_for_topography(mesh):
-    """
-    Automatically orient the mesh for optimal topographical mapping.
-
-    This function analyzes the mesh and rotates it so that the longest
-    dimension (typically the "height" of the object) aligns with the Z-axis,
-    ensuring the top-down view captures the most interesting contours.
-    """
-    # Get the bounding box dimensions
-    bounds = mesh.bounds
-    dimensions = bounds[1] - bounds[0]  # [width, depth, height]
-
-    print(
-        f"Mesh dimensions before auto-orientation: X={dimensions[0]:.3f}, Y={dimensions[1]:.3f}, Z={dimensions[2]:.3f}"
-    )
-
-    # Find which axis has the largest extent
-    max_dimension_axis = np.argmax(dimensions)
-    axis_names = ["X", "Y", "Z"]
-    print(f"Longest dimension is along {axis_names[max_dimension_axis]}-axis")
-
-    # If the longest dimension is already along Z, no rotation needed
-    if max_dimension_axis == 2:
-        print("Mesh is already optimally oriented for topography (Z is longest)")
-        return mesh
-
-    # Rotate to align the longest dimension with Z-axis
-    if max_dimension_axis == 0:  # X is longest
-        print(
-            "Applying 90° X rotation for proper topographical view (based on manual testing)"
-        )
-        rotation_matrix = trimesh.transformations.rotation_matrix(
-            np.radians(90), [1, 0, 0]
-        )
-        mesh.apply_transform(rotation_matrix)
-    elif max_dimension_axis == 1:  # Y is longest, rotate around X to align with Z
-        print("Auto-orienting: Y-axis → Z-axis (90° around X)")
-        rotation_matrix = trimesh.transformations.rotation_matrix(
-            np.radians(90), [1, 0, 0]
-        )
-        mesh.apply_transform(rotation_matrix)
-
-    # Verify the orientation after rotation
-    new_bounds = mesh.bounds
-    new_dimensions = new_bounds[1] - new_bounds[0]
-    print(
-        f"Mesh dimensions after auto-orientation: X={new_dimensions[0]:.3f}, Y={new_dimensions[1]:.3f}, Z={new_dimensions[2]:.3f}"
-    )
-
-    return mesh
-
-
-def apply_transformations(
-    mesh,
-    rotation_x=0,
-    rotation_y=0,
-    rotation_z=0,
-    translation_x=0,
-    translation_y=0,
-    translation_z=0,
-    pivot_x=0,
-    pivot_y=0,
-    pivot_z=0,
-    scale=1.0,
-):
-    """Apply transformations to the mesh (lightweight version)"""
-
-    # First, auto-orient the mesh for optimal topographical mapping
-    mesh = auto_orient_mesh_for_topography(mesh)
-
-    # Center the mesh
-    mesh.vertices -= mesh.centroid
-
-    # Apply pivot translation
-    pivot_point = np.array([pivot_x, pivot_y, pivot_z])
-    mesh.vertices -= pivot_point
-
-    # Apply user-specified rotations (convert degrees to radians)
-    if rotation_x != 0:
-        rotation_matrix_x = trimesh.transformations.rotation_matrix(
-            np.radians(rotation_x), [1, 0, 0]
-        )
-        mesh.apply_transform(rotation_matrix_x)
-
-    if rotation_y != 0:
-        rotation_matrix_y = trimesh.transformations.rotation_matrix(
-            np.radians(rotation_y), [0, 1, 0]
-        )
-        mesh.apply_transform(rotation_matrix_y)
-
-    if rotation_z != 0:
-        rotation_matrix_z = trimesh.transformations.rotation_matrix(
-            np.radians(rotation_z), [0, 0, 1]
-        )
-        mesh.apply_transform(rotation_matrix_z)
-
-    # Apply scale
-    if scale != 1.0:
-        mesh.apply_scale(scale)
-
-    # Apply translation
-    translation = np.array([translation_x, translation_y, translation_z])
-    mesh.vertices += translation
-
-    return mesh
+from ..utils.trimesh_utils import (
+    normalize_rotation,
+    auto_orient_mesh_for_topography,
+    apply_transformations,
+    load_mesh_file,
+)
 
 
 def generate_slice_preview(
@@ -152,20 +41,7 @@ def generate_slice_preview(
 
     # Load mesh
     try:
-        mesh = trimesh.load(file_path, force="mesh")
-
-        if isinstance(mesh, trimesh.Scene):
-            # Handle scene with multiple meshes
-            meshes = []
-            for geometry in mesh.geometry.values():
-                if isinstance(geometry, trimesh.Trimesh):
-                    meshes.append(geometry)
-            if meshes:
-                mesh = trimesh.util.concatenate(meshes)
-            else:
-                raise ValueError("No valid meshes found in scene")
-        elif not isinstance(mesh, trimesh.Trimesh):
-            raise ValueError("Loaded object is not a valid mesh")
+        mesh = load_mesh_file(file_path)
 
     except Exception as e:
         return {

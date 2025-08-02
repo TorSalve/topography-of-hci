@@ -2,8 +2,8 @@ from fastapi import FastAPI, File, UploadFile, HTTPException, Form
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from app.processing import process_3d_scan, process_3d_scan_svg
-from app.config import server_config
-from app.slice_preview import generate_slice_preview, render_slice_to_svg
+from app.config import Config
+from app.processors.slice_preview import generate_slice_preview, render_slice_to_svg
 import os
 import tempfile
 from typing import Optional

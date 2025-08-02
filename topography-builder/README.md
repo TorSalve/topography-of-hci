@@ -1,12 +1,46 @@
 # Topography Builder
 
-A web application that converts 3D scan files (OBJ, FBX, STL, PLY) into topographical maps using Blender.
+A comprehensive web application that converts 3D scan files (OBJ, FBX, STL, PLY) into topographical maps using multiple processing engines including Blender and Trimesh.
+
+## Features
+
+- **Multiple Processing Engines**: Choose between Blender-based processing for high-quality renders or Trimesh for fast processing
+- **Preview Generation**: Quick low-resolution previews before full processing
+- **Drag & Drop Interface**: Intuitive web interface for file uploads
+- **Flexible Output**: Configurable resolution and processing parameters
+- **Real-time Feedback**: Processing status updates and error handling
+- **RESTful API**: Well-documented API for integration with other tools
 
 ## Prerequisites
 
 - Python 3.8+
 - Node.js 16+
-- Blender (must be accessible via command line as `blender`)
+- Blender (optional, required only for Blender processing engine)
+
+## Project Structure
+
+```
+topography-builder/
+├── backend/                    # FastAPI backend server
+│   ├── app/
+│   │   ├── main.py            # FastAPI application entry point
+│   │   ├── processing.py      # Main processing orchestration
+│   │   ├── processors/        # Processing engines
+│   │   │   ├── process_mesh.py         # Blender-based processing
+│   │   │   ├── process_mesh_trimesh.py # Trimesh-based processing
+│   │   │   └── slice_preview.py        # Preview generation
+│   │   └── utils/             # Shared utilities
+│   │       ├── trimesh_utils.py        # 3D mesh processing utilities
+│   │       ├── argparse_utils.py       # Command-line argument parsing
+│   │       └── error_utils.py          # Error handling and subprocess management
+│   ├── requirements.txt       # Python dependencies
+│   └── start.sh              # Server startup script
+└── frontend/                  # React + Vite frontend
+    ├── src/                   # Source code
+    ├── public/               # Static assets
+    ├── package.json          # Node.js dependencies
+    └── vite.config.js        # Vite configuration
+```
 
 ## Configuration
 
@@ -91,9 +125,40 @@ Key configuration options:
 ## API Endpoints
 
 - `GET /` - API status and configuration
-- `GET /health` - Health check with configuration details
-- `POST /upload/` - Upload 3D file for processing
-- `GET /docs` - Interactive API documentation
+- `GET /health` - Health check with detailed system information
+- `POST /upload/` - Upload and process 3D file
+  - Supports multiple processing engines (Blender, Trimesh)
+  - Configurable processing parameters
+  - Returns processed topographical map
+- `GET /docs` - Interactive API documentation (Swagger UI)
+- `GET /redoc` - Alternative API documentation (ReDoc)
+
+### Processing Parameters
+
+The `/upload/` endpoint accepts these processing parameters:
+- `engine`: Processing engine (`blender` or `trimesh`)
+- `resolution_x`, `resolution_y`: Output image resolution
+- `subdivision_levels`: Mesh subdivision for smoother topography
+- `preview_only`: Generate low-resolution preview only
+
+## Processing Engines
+
+### Blender Engine
+- **Best for**: High-quality renders with advanced materials and lighting
+- **Requirements**: Blender installed and accessible via command line
+- **Features**: Advanced mesh processing, materials, subdivision surfaces
+- **Performance**: Slower but higher quality output
+
+### Trimesh Engine
+- **Best for**: Fast processing and programmatic mesh operations
+- **Requirements**: Only Python libraries (included in requirements.txt)
+- **Features**: Quick mesh processing, automatic orientation, efficient algorithms
+- **Performance**: Faster processing, good for previews and batch operations
+
+### Preview Mode
+- **Purpose**: Quick low-resolution previews before full processing
+- **Speed**: Very fast, typically under 10 seconds
+- **Usage**: Enable with `preview_only=true` parameter
 
 ## Supported File Formats
 
@@ -151,19 +216,89 @@ VITE_API_PORT=8000
 
 ## Troubleshooting
 
-### CORS Errors
+### Backend Issues
+
+#### CORS Errors
 If you get CORS errors, make sure:
 1. The backend server is running on the configured host/port
 2. The frontend is configured to connect to the correct backend URL
 3. Check the `/health` endpoint for current CORS configuration
 
-### Blender Not Found
+#### Blender Not Found (Blender Engine Only)
 Make sure Blender is installed and accessible via command line:
 ```bash
 blender --version
 ```
+You can also specify a custom Blender path in the environment variables.
 
-### File Upload Issues
+#### Python Dependencies
+If you encounter import errors:
+```bash
+cd backend
+pip install -r requirements.txt
+```
+
+#### File Processing Errors
+- Check the server logs for detailed error messages
+- Ensure the file format is supported
+- Try using the Trimesh engine for problematic files
+- Use preview mode first to test file compatibility
+
+### Frontend Issues
+
+#### File Upload Issues
 - Check that your file is under the configured size limit
 - Ensure the file format is supported
 - Check the browser console for configuration details (in development mode)
+- Verify the backend server is running and accessible
+
+#### Build Issues
+If the frontend fails to build:
+```bash
+cd frontend
+rm -rf node_modules package-lock.json
+npm install
+npm run dev
+```
+
+### Performance Issues
+
+#### Slow Processing
+- Use the Trimesh engine for faster processing
+- Generate previews first to verify results
+- Reduce resolution for faster processing
+- Check system resources (CPU, memory)
+
+#### Large File Handling
+- Increase `MAX_FILE_SIZE` in backend configuration
+- Consider pre-processing large files to reduce complexity
+- Use preview mode to test before full processing
+
+## Development
+
+### Backend Development
+See `backend/README.md` for detailed backend development information including:
+- Code structure and architecture
+- Adding new processing engines
+- API development guidelines
+- Testing procedures
+
+### Frontend Development
+See `frontend/README.md` for detailed frontend development information including:
+- Component structure
+- State management
+- Styling guidelines
+- Build optimization
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes following the existing code style
+4. Add tests for new functionality
+5. Update documentation as needed
+6. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.

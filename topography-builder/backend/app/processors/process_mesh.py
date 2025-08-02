@@ -5,6 +5,21 @@ import mathutils
 import math
 import argparse
 
+# Add the app directory to the path so we can import our utilities
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+try:
+    from utils.trimesh_utils import normalize_rotation
+    from utils.argparse_utils import parse_processing_args
+except ImportError:
+    # Fallback for when running directly with Blender
+    import sys
+    import os
+
+    app_dir = os.path.dirname(os.path.dirname(__file__))
+    sys.path.insert(0, app_dir)
+    from utils.trimesh_utils import normalize_rotation
+    from utils.argparse_utils import parse_processing_args
+
 print(f"Blender version: {bpy.app.version}")
 print(f"Blender version string: {bpy.app.version_string}")
 
@@ -17,103 +32,8 @@ except Exception as e:
 
 print("Using built-in import operators for STL, PLY, and OBJ files (Blender 4.x)")
 
-# Get command line arguments after '--'
-argv = sys.argv
-if "--" in argv:
-    argv = argv[argv.index("--") + 1 :]
-else:
-    argv = []
-
-# Set up argument parser
-parser = argparse.ArgumentParser(
-    description="Generate topographical maps from 3D models"
-)
-parser.add_argument("input_path", help="Path to input 3D file")
-parser.add_argument("output_path", help="Path to output PNG file")
-parser.add_argument(
-    "--contour-levels",
-    type=int,
-    default=20,
-    help="Number of contour levels (default: 20)",
-)
-parser.add_argument(
-    "--rotation-x",
-    type=float,
-    default=0.0,
-    help="Rotation around X axis in degrees (default: 0)",
-)
-parser.add_argument(
-    "--rotation-y",
-    type=float,
-    default=0.0,
-    help="Rotation around Y axis in degrees (default: 0)",
-)
-parser.add_argument(
-    "--rotation-z",
-    type=float,
-    default=0.0,
-    help="Rotation around Z axis in degrees (default: 0)",
-)
-parser.add_argument(
-    "--translation-x",
-    type=float,
-    default=0.0,
-    help="Translation along X axis (default: 0)",
-)
-parser.add_argument(
-    "--translation-y",
-    type=float,
-    default=0.0,
-    help="Translation along Y axis (default: 0)",
-)
-parser.add_argument(
-    "--translation-z",
-    type=float,
-    default=0.0,
-    help="Translation along Z axis (default: 0)",
-)
-parser.add_argument(
-    "--pivot-x", type=float, default=0.0, help="Pivot point X coordinate (default: 0)"
-)
-parser.add_argument(
-    "--pivot-y", type=float, default=0.0, help="Pivot point Y coordinate (default: 0)"
-)
-parser.add_argument(
-    "--pivot-z", type=float, default=0.0, help="Pivot point Z coordinate (default: 0)"
-)
-parser.add_argument(
-    "--scale", type=float, default=1.0, help="Scale factor (default: 1.0)"
-)
-
-# Parse arguments
-try:
-    args = parser.parse_args(argv)
-except SystemExit:
-    # If parsing fails, fall back to positional arguments for backward compatibility
-    print(
-        "Warning: Failed to parse named arguments, falling back to positional arguments"
-    )
-    if len(argv) < 2:
-        raise ValueError("At least input_path and output_path must be provided")
-
-    # Create a simple namespace with positional arguments
-    class Args:
-        def __init__(self):
-            self.input_path = argv[0]
-            self.output_path = argv[1]
-            self.contour_levels = int(argv[2]) if len(argv) > 2 else 20
-            self.rotation_x = float(argv[3]) if len(argv) > 3 else 0.0
-            self.rotation_y = float(argv[4]) if len(argv) > 4 else 0.0
-            self.rotation_z = float(argv[5]) if len(argv) > 5 else 0.0
-            self.translation_x = float(argv[6]) if len(argv) > 6 else 0.0
-            self.translation_y = float(argv[7]) if len(argv) > 7 else 0.0
-            self.translation_z = float(argv[8]) if len(argv) > 8 else 0.0
-            self.pivot_x = float(argv[9]) if len(argv) > 9 else 0.0
-            self.pivot_y = float(argv[10]) if len(argv) > 10 else 0.0
-            self.pivot_z = float(argv[11]) if len(argv) > 11 else 0.0
-            self.scale = float(argv[12]) if len(argv) > 12 else 1.0
-
-    args = Args()
+# Parse command line arguments using the consolidated utility
+args = parse_processing_args(description="Generate topographical maps from 3D models")
 
 # Extract parameters from parsed arguments
 input_path = args.input_path
@@ -130,18 +50,7 @@ pivot_y = args.pivot_y
 pivot_z = args.pivot_z
 scale = args.scale
 
-
-# Normalize rotation values to -180 to 180 range
-def normalize_rotation(angle):
-    """Normalize angle to [-180, 180] range"""
-    angle = angle % 360
-    if angle > 180:
-        angle -= 360
-    elif angle < -180:
-        angle += 360
-    return angle
-
-
+# Normalize rotation values using the consolidated utility function
 rotation_x = normalize_rotation(rotation_x)
 rotation_y = normalize_rotation(rotation_y)
 rotation_z = normalize_rotation(rotation_z)
