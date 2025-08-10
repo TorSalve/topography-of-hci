@@ -14,6 +14,7 @@ import {
   intersectsRect,
 } from "../../utils/svgUtils";
 import { clientToSvgUnits, computeZoomedCamera } from "../../utils/cameraUtils";
+import PropertiesPanel from "./components/PropertiesPanel";
 
 /**
  * Main Map Editor Component
@@ -560,54 +561,54 @@ const MapEditor = ({
       icon: "🔍",
       action: () => setActiveTool("zoom"),
     },
-    {
-      id: "draw-path",
-      name: "Draw Path (Ctrl+P)",
-      icon: "🖊️",
-      action: () => startDrawing("draw-path"),
-    },
-    {
-      id: "draw-polygon",
-      name: "Draw Area (Ctrl+Shift+A)",
-      icon: "🔺",
-      action: () => startDrawing("draw-polygon"),
-    },
-    {
-      id: "draw-line",
-      name: "Draw Line (Ctrl+L)",
-      icon: "📏",
-      action: () => startDrawing("draw-line"),
-    },
-    {
-      id: "convert-to-path",
-      name: "Convert to Path (Ctrl+Shift+P)",
-      icon: "🛤️",
-      action: convertToPath,
-    },
-    {
-      id: "drop-shadow",
-      name: "Drop Shadow (Ctrl+Shift+S)",
-      icon: "🌫️",
-      action: () => applyFilter("drop-shadow"),
-    },
-    {
-      id: "glow",
-      name: "Glow Effect (Ctrl+Shift+G)",
-      icon: "✨",
-      action: () => applyFilter("glow"),
-    },
-    {
-      id: "blur",
-      name: "Blur Effect (Ctrl+Shift+B)",
-      icon: "🌊",
-      action: () => applyFilter("blur", 2),
-    },
-    {
-      id: "remove-filters",
-      name: "Clear Filters (Ctrl+Shift+F)",
-      icon: "🧹",
-      action: () => applyFilter("remove-filters"),
-    },
+    // {
+    //   id: "draw-path",
+    //   name: "Draw Path (Ctrl+P)",
+    //   icon: "🖊️",
+    //   action: () => startDrawing("draw-path"),
+    // },
+    // {
+    //   id: "draw-polygon",
+    //   name: "Draw Area (Ctrl+Shift+A)",
+    //   icon: "🔺",
+    //   action: () => startDrawing("draw-polygon"),
+    // },
+    // {
+    //   id: "draw-line",
+    //   name: "Draw Line (Ctrl+L)",
+    //   icon: "📏",
+    //   action: () => startDrawing("draw-line"),
+    // },
+    // {
+    //   id: "convert-to-path",
+    //   name: "Convert to Path (Ctrl+Shift+P)",
+    //   icon: "🛤️",
+    //   action: convertToPath,
+    // },
+    // {
+    //   id: "drop-shadow",
+    //   name: "Drop Shadow (Ctrl+Shift+S)",
+    //   icon: "🌫️",
+    //   action: () => applyFilter("drop-shadow"),
+    // },
+    // {
+    //   id: "glow",
+    //   name: "Glow Effect (Ctrl+Shift+G)",
+    //   icon: "✨",
+    //   action: () => applyFilter("glow"),
+    // },
+    // {
+    //   id: "blur",
+    //   name: "Blur Effect (Ctrl+Shift+B)",
+    //   icon: "🌊",
+    //   action: () => applyFilter("blur", 2),
+    // },
+    // {
+    //   id: "remove-filters",
+    //   name: "Clear Filters (Ctrl+Shift+F)",
+    //   icon: "🧹",
+    //   action: () => applyFilter("remove-filters"),
+    // },
     { id: "add-label", name: "Add Label", icon: "🏷️" },
     { id: "add-symbol", name: "Add Symbol", icon: "📍" },
     { id: "hiking-path", name: "Hiking Path", icon: "🥾" },
@@ -1875,21 +1876,17 @@ const MapEditor = ({
           const next = prev.filter((el) => el !== target);
           // Always update active transform to last element in remaining selection
           const newActive = next.length ? next[next.length - 1] : null;
-          //   "🎯 New active transform target:",
-          //   newActive?.id || "none"
-          // );
           enableTransformFor(newActive);
           return next;
         });
       } else {
-        // Add to selection
+        // Add to selection (only if not already present)
         setIsMarqueeSelection(false); // Individual/shift-click selection
         applySelectionStyle(target);
         setSelectedElements((prev) => {
+          if (prev.includes(target)) return prev;
           const next = [...prev, target];
-          // Make this the active transform target
           enableTransformFor(target);
-
           return next;
         });
       }
@@ -2674,9 +2671,10 @@ const MapEditor = ({
               applySelectionStyle(el);
             }
           }
+          // Deduplicate (shouldn't be needed, but for safety)
+          next = Array.from(new Set(next));
         } else {
           // Regular marquee: replace selection with hits
-          next = [...hits];
           // Remove styling from any previously selected not in hits
           prev.forEach((el) => {
             if (!hits.includes(el)) {
@@ -2684,6 +2682,7 @@ const MapEditor = ({
             }
           });
           // Apply selected styling to all in next
+          next = Array.from(new Set(hits));
           next.forEach((el) => {
             applySelectionStyle(el);
           });
@@ -2955,6 +2954,77 @@ const MapEditor = ({
     updateAttrOnSelection("stroke-dasharray", v);
   };
 
+  // Unified property change handler for the enhanced inspector
+  const onPropertyChange = useCallback(
+    (property, value) => {
+      switch (property) {
+        case "stroke":
+          setPropStroke(value);
+          updateAttrOnSelection("stroke", value);
+          break;
+        case "stroke-width":
+          setPropStrokeWidth(value);
+          updateAttrOnSelection("stroke-width", value);
+          break;
+        case "fill":
+          setPropFill(value);
+          updateAttrOnSelection("fill", value);
+          break;
+        case "opacity":
+          setPropOpacity(value);
+          updateAttrOnSelection("opacity", value);
+          break;
+        case "stroke-linecap":
+          setPropLinecap(value);
+          updateAttrOnSelection("stroke-linecap", value);
+          break;
+        case "stroke-linejoin":
+          setPropLinejoin(value);
+          updateAttrOnSelection("stroke-linejoin", value);
+          break;
+        case "stroke-dasharray":
+          setPropDasharray(value);
+          updateAttrOnSelection("stroke-dasharray", value);
+          break;
+        case "d":
+          // Handle path data changes
+          selectedElements.forEach((el) => {
+            if (el.tagName.toLowerCase() === "path") {
+              el.setAttribute("d", value);
+              overlayFnsRef.current.updateUnified();
+            }
+          });
+          break;
+        case "close-path":
+          // Close the path if it's not already closed
+          selectedElements.forEach((el) => {
+            if (el.tagName.toLowerCase() === "path") {
+              let pathData = el.getAttribute("d") || "";
+              if (
+                !pathData.trim().endsWith("Z") &&
+                !pathData.trim().endsWith("z")
+              ) {
+                el.setAttribute("d", pathData + " Z");
+                overlayFnsRef.current.updateUnified();
+              }
+            }
+          });
+          break;
+        default:
+          console.warn("Unknown property:", property);
+      }
+    },
+    [selectedElements]
+  );
+
+  // Enhanced transform handler that integrates with the inspector
+  const onTransform = useCallback(
+    (transformType, value) => {
+      transformSelected(transformType, value);
+    },
+    [transformSelected]
+  );
+
   // Extract minX/minY from content viewBox to translate content to origin before scaling
   const [contentMinX, contentMinY] = (contentViewBox || "0 0 0 0")
     .split(" ")
@@ -3062,7 +3132,7 @@ const MapEditor = ({
         </button>
       </div>
 
-      {/* Work Area: Left tools + Canvas */}
+      {/* Work Area: Left tools + Canvas + Properties Panel */}
       <div className={styles.workArea}>
         {/* Left Toolbar */}
         <div className={styles.leftToolbar}>
@@ -3200,6 +3270,29 @@ const MapEditor = ({
             {/* Removed custom selection overlay; svg.js selectize/resize provide visuals plus our overlay */}
           </svg>
         </div>
+
+        {/* Right Properties Panel */}
+        <div className={styles.rightPropertiesPanel}>
+          <div className={`${styles.panel} ${styles.layersPanel}`}>
+            <h3>Layers</h3>
+            <p>Layer management coming soon...</p>
+          </div>
+          <PropertiesPanel
+            selectedElements={selectedElements}
+            properties={{
+              stroke: propStroke,
+              strokeWidth: propStrokeWidth,
+              fill: propFill,
+              opacity: propOpacity,
+              linecap: propLinecap,
+              linejoin: propLinejoin,
+              dasharray: propDasharray,
+            }}
+            onPropertyChange={onPropertyChange}
+            getTransformInfo={getTransformInfo}
+            onTransform={onTransform}
+          />
+        </div>
       </div>
 
       {/* Status Bar */}
@@ -3207,101 +3300,6 @@ const MapEditor = ({
         <span>Tool: {tools.find((t) => t.id === activeTool)?.name}</span>
         <span>Zoom: {Math.round(zoom * 100)}%</span>
         <span>Selected: {selectedElements.length} elements</span>
-      </div>
-
-      {/* Side Panels */}
-      <div className={styles.sidePanels}>
-        <div className={`${styles.panel} ${styles.layersPanel}`}>
-          <h3>Layers</h3>
-          <p>Layer management coming soon...</p>
-        </div>
-        <div className={`${styles.panel} ${styles.propertiesPanel}`}>
-          <h3>Properties</h3>
-          {selectedElements.length > 0 ? (
-            <>
-              {selectedElements.length > 1 && (
-                <div
-                  style={{
-                    padding: "8px",
-                    background: "#f0f0f0",
-                    borderRadius: "4px",
-                    marginBottom: "12px",
-                    fontSize: "0.9em",
-                    color: "#666",
-                  }}
-                >
-                  {selectedElements.length} elements selected
-                </div>
-              )}
-              <form onSubmit={(e) => e.preventDefault()}>
-                <div>
-                  <label>Stroke</label>
-                  <input
-                    type="color"
-                    value={propStroke}
-                    onChange={onStrokeChange}
-                  />
-                </div>
-                <div>
-                  <label>Stroke width</label>
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.5"
-                    value={propStrokeWidth}
-                    onChange={onStrokeWidthChange}
-                  />
-                </div>
-                <div>
-                  <label>Fill</label>
-                  <input
-                    type="color"
-                    value={propFill}
-                    onChange={onFillChange}
-                  />
-                </div>
-                <div>
-                  <label>Opacity</label>
-                  <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.05"
-                    value={propOpacity}
-                    onChange={onOpacityChange}
-                  />
-                </div>
-                <div>
-                  <label>Line cap</label>
-                  <select value={propLinecap} onChange={onLinecapChange}>
-                    <option value="butt">butt</option>
-                    <option value="round">round</option>
-                    <option value="square">square</option>
-                  </select>
-                </div>
-                <div>
-                  <label>Line join</label>
-                  <select value={propLinejoin} onChange={onLinejoinChange}>
-                    <option value="miter">miter</option>
-                    <option value="round">round</option>
-                    <option value="bevel">bevel</option>
-                  </select>
-                </div>
-                <div>
-                  <label>Dash array</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. 4 2"
-                    value={propDasharray}
-                    onChange={onDasharrayChange}
-                  />
-                </div>
-              </form>
-            </>
-          ) : (
-            <p>Select an element to edit properties</p>
-          )}
-        </div>
       </div>
     </div>
   );
