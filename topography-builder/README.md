@@ -1,15 +1,28 @@
 # Topography Builder
 
+🚧 **This tool is currently under active development** 🚧
+
 A comprehensive web application that converts 3D scan files (OBJ, FBX, STL, PLY) into topographical maps using multiple processing engines including Blender and Trimesh.
+
+> ⚠️ **Development Status**: This project is in active development. While core functionality works, expect frequent changes, potential bugs, and incomplete features. Use at your own discretion and check back regularly for updates.
 
 ## Features
 
+### ✅ Currently Working:
 - **Multiple Processing Engines**: Choose between Blender-based processing for high-quality renders or Trimesh for fast processing
 - **Preview Generation**: Quick low-resolution previews before full processing
 - **Drag & Drop Interface**: Intuitive web interface for file uploads
 - **Flexible Output**: Configurable resolution and processing parameters
 - **Real-time Feedback**: Processing status updates and error handling
 - **RESTful API**: Well-documented API for integration with other tools
+
+### 🚧 Under Development:
+- **Enhanced SVG Map Editor**: Advanced topographical editing capabilities
+- **Advanced Analysis Tools**: Statistical analysis of topographical features
+- **Collaborative Editing**: Multi-user editing and sharing features
+- **Integration with Main Website**: Seamless connection to topography-of-hci.dk
+- **Batch Processing**: Process multiple files simultaneously
+- **Export Options**: Additional output formats and quality settings
 
 ## Prerequisites
 
@@ -117,10 +130,18 @@ Key configuration options:
 
 ## Usage
 
+> 🔧 **Note**: As this tool is under development, the interface and workflow may change. Check this README for the latest instructions.
+
 1. Open your browser and go to `http://localhost:5173` (or the URL shown in the terminal)
 2. Drag and drop a 3D file (OBJ, FBX, STL, or PLY) onto the upload area
 3. Wait for processing to complete
 4. The topographical map will automatically download as a PNG file
+
+**Known Issues**:
+- Some file formats may not process correctly
+- Large files (>50MB) may cause timeouts
+- UI may be inconsistent across different browsers
+- Error messages may not always be helpful
 
 ## API Endpoints
 
@@ -292,12 +313,51 @@ See `frontend/README.md` for detailed frontend development information including
 
 ## Contributing
 
+🤝 **We Welcome Contributors!** 
+
+This project is actively seeking contributors to help with development. Whether you're interested in:
+- **Frontend Development**: React/Vite interface improvements
+- **Backend Development**: FastAPI processing engines
+- **3D Processing**: Blender scripting and mesh algorithms  
+- **UI/UX Design**: Making the interface more intuitive
+- **Documentation**: Improving guides and API docs
+- **Testing**: Finding bugs and edge cases
+
+**How to Contribute**:
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes following the existing code style
 4. Add tests for new functionality
 5. Update documentation as needed
 6. Submit a pull request
+
+**Development Guidelines**:
+- Check existing issues before starting work
+- Discuss major changes in issues first
+- Write clear commit messages
+- Test your changes thoroughly
+- Update relevant documentation
+
+> 💡 **Tip**: Since this is under active development, coordinate with other contributors through GitHub issues to avoid duplicate work.
+
+## Roadmap & Status
+
+### Current Phase: Core Development
+- ✅ Basic file processing pipeline
+- ✅ API endpoints and documentation
+- 🚧 Frontend interface refinement
+- 🚧 Error handling improvements
+
+### Next Phase: Feature Enhancement
+- 📋 Advanced editing tools
+- 📋 Batch processing capabilities
+- 📋 Integration with main website
+- 📋 Performance optimizations
+
+### Future: Community Features
+- 📋 Collaborative editing
+- 📋 Cloud processing options
+- 📋 Advanced analysis tools
 
 ## License
 
