@@ -15,7 +15,7 @@
           <div class="card topography-card">
             <img
               class="card-img-top"
-              src="{{ site.logo.mobile | relative_url }}"
+              src="{{ topography.image | relative_url | default: site.logo.mobile | relative_url }}"
               alt="Image of {{ topography.title }}"
             />
             <div class="card-header">

@@ -1,103 +1,94 @@
-# Jekyll Serif Theme
+# Topography of HCI Website
 
-Serif is a modern business theme for Jekyll. It contains multiple content types for a typical brochure/marketing website. The theme is fully responsive, blazing fast and artfully illustrated.
+This directory contains the Jekyll-based website for the **Topography of Human-Computer Interaction** project. The website showcases interactive topographies, research methodology, team information, and downloadable resources.
 
-[Live Demo](https://jekyll-serif.netlify.app/) |
-[Zerostatic Themes](https://www.zerostatic.io)
+**Live Website**: [https://topography-of-hci.dk/](https://topography-of-hci.dk/)
 
-<a href="https://www.buymeacoffee.com/zerostatic" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+## About the Website
 
-![Jekyll Serif Theme screenshot](https://www.zerostatic.io/theme/jekyll-serif/jekyll-serif-screenshot.png)
+The website serves as the primary platform for:
+- **Exploring Topographies**: Interactive 3D models and contour maps of HCI landscapes
+- **Understanding the Method**: How collaborative sculpting maps the HCI field
+- **Team Introductions**: Meet the researchers behind the project
+- **Resource Sharing**: Access downloadable models and materials
+- **Community Building**: Instructions for creating your own topography
 
-### Theme features
+## Content Structure
 
+```
+docs/
+├── _topographies/           # Individual topography entries and data
+├── _team/                   # Team member profiles  
+├── _data/                   # Site configuration and structured data
+├── _includes/               # Reusable HTML components
+├── _layouts/                # Page layout templates
+├── _sass/                   # SCSS stylesheets
+├── assets/                  # CSS, JavaScript, and static files
+├── images/                  # Project images and media
+├── index.md                 # Homepage content
+├── about.md                 # Project overview and background
+├── method.md                # Methodology and instructions
+├── team.md                  # Team page
+├── topographies.md          # Topography gallery
+└── _config.yml              # Jekyll configuration
+```
+
+## Local Development
+
+### Prerequisites
+- Ruby 2.7+
 - Jekyll 4.2+
-- Netlify & Github Pages ready
-- topographies (Collection)
-- Team (Collection)
-- Features (Data)
-- SCSS
-- 100% Responsive design, animated hamburger and mobile slide in menu
-- Bootstrap 4.6 - _Only the bootstrap grid and utilites are imported by default. If you want to use more of the Boostrap library you can uncomment the `@import` in `style.scss`_
-- 100/100 Google Lighthouse speed score
-- 100/100 Google Lighthouse seo score
-- 100/100 Google Lighthouse accessibility score
-- 100/100 Google Lighthouse best practices score
-- Under 50KB without images or 80KB with images and illustrations ⚡
-- Under 20KB without Google fonts ⚡⚡⚡
-- Robust example content included
-- Royalty free illustrations included
+- Bundler gem
 
-## Installation
+### Setup Instructions
 
-### Installing Ruby & Jekyll
+1. **Install Dependencies**
+   ```bash
+   cd docs/
+   bundle install
+   ```
 
-If this is your first time using Jekyll, please follow the [Jekyll docs](https://jekyllrb.com/docs/installation/) and make sure your local environment (including Ruby) is setup correctly.
+2. **Start Development Server**
+   ```bash
+   bundle exec jekyll serve
+   ```
 
-### Installing Theme
+3. **View Local Site**
+   Open `http://localhost:4000` in your browser
 
-Download or clone the theme.
-
-To run the theme locally, navigate to the theme directory and run:
-
-```
-bundle install
-```
-
-To start the Jekyll local development server.
-
-```
-bundle exec jekyll serve
-```
-
-To build the theme.
-
-```
-bundle exec jekyll build
-```
+4. **Build for Production**
+   ```bash
+   bundle exec jekyll build
+   ```
 
 ## Deployment
 
-### Netlify
+### GitHub Pages (Current)
+This website is automatically deployed via GitHub Pages from the `/docs` folder. Any push to the main branch triggers a rebuild.
 
-Use Netlify to deploy this theme. This theme contains a valid and tested `netlify.toml` - Feel free to use the 1-click deploy below.
+**Live URL**: [https://topography-of-hci.dk/](https://topography-of-hci.dk/)
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/zerostaticthemes/jekyll-serif-theme)
+## Technical Details
 
-### Github Pages
+This website is built using:
+- **Jekyll 4.2+** - Static site generator
+- **Bootstrap 4.6** - Responsive grid system and utilities
+- **GitHub Pages** - Automatic deployment
+- **Jekyll Serif Theme** - Base theme (customized for HCI content)
 
-This theme has been tested to work with Github Pages (and Github Project Pages). When using Github Pages you will need to update the `baseurl` in the `_config.yml` otherwise all the css, images and paths will be broken.
+## License & Credits
 
-For example the site https://zerostaticthemes.github.io/jekyll-serif-theme would have `baseurl: "/jekyll-serif-theme/"`
+### Content License
+The website content (text, research materials, documentation) is licensed under [Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/) - see `LICENSE-CONTENT` for details.
 
-## Extras
-
-### License
-
-- You cannot create ports of this theme
-- You cannot re-sell this theme
+### Theme License  
+The underlying Jekyll Serif theme is licensed under MIT by Robert Austin (Zerostatic Themes) - see `LICENSE` for details.
 
 ### Credits
+- **Jekyll Serif Theme**: [Zerostatic Themes](https://www.zerostatic.io) by Robert Austin
+- **Icons**: [Noun Project](https://thenounproject.com/)
+- **Images**: Project-specific photography and 3D visualizations
 
-- Beautiful royalty free Illustrations by Icons8 - https://icons8.com/illustrations/style--pixeltrue
-- Stock images by Unsplash - https://unsplash.com/
-- Feature icons by Noun Project - https://thenounproject.com/
+---
 
-## Support My Work
-
-I've been building open source themes for all the main static site generators for over 4 years now. My premium themes allow me to continue to allocate time to maintain, improve and build new open source themes.
-
-1. Leave a star ⭐🙏🏻
-2. Make a contribution to this theme, add a feature, fix a bug, nothing is to small 
-2. Mention this theme on twitter [@zerostaticio](https://twitter.com/zerostaticio) 📢
-3. Purchase a premium theme 🔥
-
-### All Jekyll Themes by Zerostatic
-
-- [Jekyll Serif (Open Source)](https://www.zerostatic.io/theme/jekyll-serif/)
-- [Jekyll Atlantic (Open Source)](https://www.zerostatic.io/theme/jekyll-atlantic/)
-- [Jekyll Advance (Premium)](https://www.zerostatic.io/theme/jekyll-advance/)
-- [Jekyll Origin (Premium)](https://www.zerostatic.io/theme/jekyll-origin/)
-- [Jekyll Curate (Premium)](https://www.zerostatic.io/theme/jekyll-curate/)
-
-🇦🇺 **Made in Australia** by Robert Austin
+*This website documents the evolving landscape of Human-Computer Interaction through collaborative, tangible mapping.*

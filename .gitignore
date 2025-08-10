@@ -28,16 +28,6 @@ temp_*
 # 3D model test files (can be large)
 test_models/
 sample_models/
-*.obj
-*.stl
-*.ply
-*.fbx
-*.blend
-*.3ds
-*.dae
-*.x3d
-*.gltf
-*.glb
 
 # Generated documentation
 docs/_build/
