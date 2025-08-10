@@ -11,75 +11,65 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Main Toolbar */
-.toolbar {
+/* New: Top Menu Bar */
+.menuBar {
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 8px 16px;
+  gap: 16px;
+  padding: 6px 12px;
   background-color: #ffffff;
   border-bottom: 1px solid #e0e0e0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  gap: 16px;
-  flex-shrink: 0;
 }
 
-.toolGroup {
-  display: flex;
-  gap: 4px;
-  align-items: center;
+.menuItem {
+  position: relative;
 }
 
-.toolButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 60px;
-  height: 40px;
-  padding: 4px 8px;
-  border: 1px solid #d0d0d0;
-  background-color: #ffffff;
-  border-radius: 4px;
+.menuItem summary {
+  list-style: none;
   cursor: pointer;
-  font-size: 12px;
-  transition: all 0.2s ease;
+  padding: 6px 10px;
+  border-radius: 4px;
 }
 
-.toolContent {
+.menuItem[open] summary,
+.menuItem summary:hover {
+  background: #f0f0f0;
+}
+
+.menuDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 180px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  padding: 6px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 2px;
+  z-index: 30;
 }
 
-.toolIcon {
-  font-size: 14px;
-  line-height: 1;
+.menuDropdown button {
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: 8px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
 }
 
-.toolLabel {
-  font-size: 10px;
-  font-weight: 500;
-  line-height: 1;
-  white-space: nowrap;
+.menuDropdown button:hover:not(:disabled) {
+  background: #f5f7fb;
 }
 
-.toolButton:hover {
-  background-color: #f0f0f0;
-  border-color: #999999;
-}
-
-.toolButton.active {
-  background-color: #2563eb;
-  color: white;
-  border-color: #1d4ed8;
-}
-
-.toolButton:disabled {
-  background-color: #f5f5f5;
-  color: #999999;
-  border-color: #e0e0e0;
-  cursor: not-allowed;
+.menuDropdown hr {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 6px 2px;
 }
 
 /* Canvas Container */
@@ -97,6 +87,7 @@
   user-select: none; /* Prevent text selection during panning */
 }
 
+/* DEBUG: Temporarily disable hover effects to isolate the issue */
 .mapCanvas {
   width: 100%;
   height: 100%;
@@ -114,11 +105,215 @@
   }
 }
 
-/* Selected elements styling */
-.mapCanvas path.selected {
-  stroke: #ff0000 !important;
-  stroke-width: 3 !important;
-  filter: drop-shadow(0 0 3px rgba(255, 0, 0, 0.5));
+/* Make paths easier to select with hover feedback - now handled by DOM cloning */
+.contentGroup path,
+.contentGroup polyline,
+.contentGroup polygon,
+.contentGroup line,
+.contentGroup rect,
+.contentGroup circle,
+.contentGroup ellipse,
+.contentGroup use {
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  /* Hover effects now handled by DOM cloning instead of CSS */
+
+  &.selected {
+    stroke: #00a3ff !important;
+    stroke-width: max(
+      2px,
+      calc(var(--original-stroke-width, 1) * 1.5)
+    ) !important;
+    filter: drop-shadow(0 0 4px rgba(0, 163, 255, 0.8));
+    opacity: 1;
+  }
+}
+
+/* Improve path selection by adding invisible wider stroke for easier clicking */
+.contentGroup path,
+.contentGroup polyline,
+.contentGroup line {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* svg.js selection handles styling */
+:global(.svg-select-handle) {
+  fill: #00a3ff !important;
+  stroke: #ffffff !important;
+  stroke-width: 2px !important;
+  cursor: pointer !important;
+  opacity: 0.9 !important;
+  transition: all 0.2s ease !important;
+
+  &:hover {
+    fill: #0066cc !important;
+    stroke-width: 3px !important;
+    opacity: 1 !important;
+    transform: scale(1.1) !important;
+  }
+}
+
+:global(.svg-select-points) {
+  cursor: pointer !important;
+}
+
+:global(.svg-select-line) {
+  stroke: #00a3ff !important;
+  stroke-width: 1px !important;
+  stroke-dasharray: 4 2 !important;
+  opacity: 0.8 !important;
+  pointer-events: none !important;
+}
+
+/* svg.js resize handles */
+:global(.svg-resize-handle) {
+  fill: #00a3ff !important;
+  stroke: #ffffff !important;
+  stroke-width: 2px !important;
+  cursor: pointer !important;
+  opacity: 0.9 !important;
+  transition: all 0.2s ease !important;
+
+  &:hover {
+    fill: #0066cc !important;
+    opacity: 1 !important;
+    transform: scale(1.15) !important;
+  }
+}
+
+/* Different cursors for different resize handles */
+:global(.svg-resize-handle[data-direction="nw"]),
+:global(.svg-resize-handle[data-direction="se"]) {
+  cursor: nw-resize !important;
+}
+
+:global(.svg-resize-handle[data-direction="ne"]),
+:global(.svg-resize-handle[data-direction="sw"]) {
+  cursor: ne-resize !important;
+}
+
+:global(.svg-resize-handle[data-direction="n"]),
+:global(.svg-resize-handle[data-direction="s"]) {
+  cursor: ns-resize !important;
+}
+
+:global(.svg-resize-handle[data-direction="e"]),
+:global(.svg-resize-handle[data-direction="w"]) {
+  cursor: ew-resize !important;
+}
+
+/* svg.js rotation handle */
+:global(.svg-rotation-handle) {
+  fill: #ff6b6b !important;
+  stroke: #ffffff !important;
+  stroke-width: 2px !important;
+  cursor: grab !important;
+  opacity: 0.9 !important;
+  transition: all 0.2s ease !important;
+
+  &:hover {
+    fill: #ff5252 !important;
+    opacity: 1 !important;
+    transform: scale(1.2) !important;
+  }
+
+  &:active {
+    cursor: grabbing !important;
+  }
+}
+
+/* svg.js drag handles */
+:global(.svg-drag-handle) {
+  cursor: move !important;
+  opacity: 0.8 !important;
+  transition: opacity 0.2s ease !important;
+
+  &:hover {
+    opacity: 1 !important;
+  }
+
+  &:active {
+    cursor: grabbing !important;
+  }
+}
+
+/* Hover overlay styling */
+:global(.hover-overlay) {
+  pointer-events: none !important;
+  opacity: 0.7 !important;
+  stroke: #0066ff !important;
+  fill: none !important;
+  transition: opacity 0.15s ease !important;
+}
+
+/* Custom transform feedback */
+.transformFeedback {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: monospace;
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+
+  &.visible {
+    opacity: 1;
+  }
+}
+
+/* Drawing mode indicator */
+.drawingModeIndicator {
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  pointer-events: none;
+  z-index: 1001;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  animation: drawingPulse 2s infinite;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@keyframes drawingPulse {
+  0%,
+  100% {
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  }
+  50% {
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+    transform: translateX(-50%) translateY(-1px);
+  }
+}
+
+/* Marquee selection styling */
+:global(#marquee-selection-group) {
+  pointer-events: none !important;
+}
+
+:global(#marquee-main-rect) {
+  fill: rgba(0, 163, 255, 0.1) !important;
+  stroke: #00a3ff !important;
+  stroke-width: 1px !important;
+  stroke-dasharray: 4 2 !important;
+  opacity: 0.8 !important;
+  pointer-events: none !important;
 }
 
 /* Status Bar */
@@ -138,52 +333,101 @@
   margin-right: 16px;
 }
 
-/* Side Panels */
-.sidePanels {
-  position: absolute;
-  right: 0;
-  top: 60px; /* Below toolbar */
-  bottom: 40px; /* Above status bar */
-  width: 300px;
-  background-color: #ffffff;
-  border-left: 1px solid #e0e0e0;
+/* New: Work area with left toolbar */
+.workArea {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  height: 100%;
+}
+
+.leftToolbar {
+  background: #ffffff;
+  border-right: 1px solid #e0e0e0;
   display: flex;
   flex-direction: column;
-  box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-  transform: translateX(100%);
-  transition: transform 0.3s ease;
+  align-items: center;
+  padding: 8px 4px;
+  gap: 6px;
+  overflow: visible; /* allow tooltips to overflow */
 }
 
-.sidePanels.open {
-  transform: translateX(0);
+.leftToolButton {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d0d0d0;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative; /* anchor custom tooltip */
 }
 
-.panel {
-  padding: 16px;
-  border-bottom: 1px solid #e0e0e0;
-  flex-shrink: 0;
-}
-
-.panel h3 {
-  margin: 0 0 12px 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: #333333;
-}
-
-.panel p {
-  margin: 0;
+/* Custom tooltips for left toolbar buttons */
+.leftToolButton[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 48px; /* to the right of the button */
+  top: 50%;
+  transform: translateY(-50%) translateX(-4px);
+  background: #111;
+  color: #fff;
   font-size: 12px;
-  color: #666666;
+  line-height: 1;
+  padding: 6px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 50;
 }
 
-.layersPanel {
-  min-height: 200px;
+.leftToolButton[data-tooltip]::before {
+  content: "";
+  position: absolute;
+  left: 42px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent #111 transparent transparent; /* right-pointing arrow */
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 49;
 }
 
-.propertiesPanel {
-  min-height: 150px;
+.leftToolButton[data-tooltip]:hover::after,
+.leftToolButton[data-tooltip]:focus-visible::after {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+.leftToolButton[data-tooltip]:hover::before,
+.leftToolButton[data-tooltip]:focus-visible::before {
+  opacity: 1;
+}
+
+.leftToolButton:hover {
+  background: #f0f0f0;
+  border-color: #999;
+}
+
+.leftToolButton.active {
+  background-color: #2563eb;
+  color: white;
+  border-color: #1d4ed8;
+}
+
+.leftToolIcon {
+  font-size: 16px;
+}
+
+/* Hide legacy top toolbar */
+.toolbar {
+  display: none;
 }
 
 /* Responsive Design */
@@ -307,6 +551,14 @@
 
   .panel p {
     color: #cccccc;
+  }
+
+  /* Adjust tooltip for dark mode to match theme */
+  .leftToolButton[data-tooltip]::after {
+    background: #222;
+  }
+  .leftToolButton[data-tooltip]::before {
+    border-color: transparent #222 transparent transparent;
   }
 }
 
