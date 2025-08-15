@@ -27,6 +27,24 @@ When complete, you'll find:
 
 Feel free to use these models in your research, publications, and educational materials. While attribution is not required under CC0, we appreciate citations to help others discover the project.
 
+Dalsgaard, T.-S., & Cerna, K. (2025). The Topography of Human-Computer Interaction. Adjunct Proceedings of the Sixth Decennial Aarhus Conference: Computing X Crisis (AAR Adjunct 2025), 1–2. https://doi.org/10.1145/3737609.3747105
+
+```
+@inproceedings{10.1145/3737609.3747105,
+  title = {The {{Topography}} of {{Human-Computer Interaction}}},
+  booktitle = {Adjunct Proceedings of the Sixth Decennial {{Aarhus}} Conference: {{Computing X Crisis}} ({{AAR Adjunct}} 2025)},
+  author = {Dalsgaard, Tor-Salve and Cerna, Katerina},
+  year = {2025},
+  month = aug,
+  pages = {1--2},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  doi = {10.1145/3737609.3747105},
+  isbn = {979-8-4007-1968-4},
+  langid = {english}
+}
+```
+
 ## 📧 Contribute
 
-Have models from your own topography event? We'd love to include them! Contact us through the main website: https://topography-of-hci.dk/contact/
+Have models from your own topography event? We'd love to include them! Contact us through the main website: https://topography-of-hci.dk/about/

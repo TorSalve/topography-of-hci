@@ -7,22 +7,22 @@
 
 An interactive, collaborative representation of the Human-Computer Interaction landscape through physical and digital mapping.
 
-## 🌍 About
+## About
 
 The **Topography of Human-Computer Interaction** is an innovative project that captures the evolving landscape of HCI through collaborative sculpture. Originally created for the Aarhus 2025 conference, this experience invites the HCI community to shape, reflect, and connect by creating both physical and digital maps of our shared field.
 
 **Visit the full experience at: [https://topography-of-hci.dk/](https://topography-of-hci.dk/)**
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 topography-of-hci/
-├── docs/                    # 🌐 Website source (Jekyll-based)
-├── models/                  # 📦 Downloadable 3D models and assets
-└── README.md                # 📖 This file
+├── docs/                    # Website source (Jekyll-based)
+├── models/                  # Downloadable 3D models and assets
+└── README.md                # This file
 ```
 
-## 📦 Downloadable Models
+## Downloadable Models
 
 The `/models` folder contains 3D models, contour maps, and related assets that you can freely download and use:
 
@@ -32,16 +32,14 @@ The `/models` folder contains 3D models, contour maps, and related assets that y
 
 *Note: The models folder is currently being populated with content.*
 
-...existing code...
-
-## 🎯 How It Works
+## How It Works
 
 1. **Physical Sculpting**: Participants add modeling clay to represent their HCI expertise areas
 2. **3D Scanning**: Regular scans capture the evolving landscape using iPad LiDAR
 3. **Digital Processing**: Scans are converted into 3D models and contour maps
 4. **Community Sharing**: All materials are published openly for reuse and adaptation
 
-## 🤝 Getting Involved
+## Getting Involved
 
 ### Create Your Own Topography
 Want to recreate this experience in your community? You can:
@@ -52,7 +50,7 @@ Want to recreate this experience in your community? You can:
 - **Website**: Submit improvements to the Jekyll site in `/docs`
 - **Models**: Contribute new topography models to `/models`
 
-## 📄 License
+## License
 
 This project uses different licenses for different components:
 
@@ -60,18 +58,33 @@ This project uses different licenses for different components:
 - **Website Content** (`/docs`): [Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/) - Free to use with attribution
 
 This approach ensures that:
-- 🔬 **Researchers** can freely use and build upon the models and data
-- 💻 **Developers** can integrate and extend the processing tools
-- 🌍 **Communities** can adapt the methodology without legal barriers
+- **Researchers** can freely use and build upon the models and data
+- **Developers** can integrate and extend the processing tools
+- **Communities** can adapt the methodology without legal barriers
 
-## 📚 Citation
+## Citation
 
 If you use this work in your research or create your own topography, please cite:
+
+Dalsgaard, T.-S., & Cerna, K. (2025). The Topography of Human-Computer Interaction. Adjunct Proceedings of the Sixth Decennial Aarhus Conference: Computing X Crisis (AAR Adjunct 2025), 1–2. https://doi.org/10.1145/3737609.3747105
+
 ```
-[Citation information will be updated upon publication]
+@inproceedings{10.1145/3737609.3747105,
+  title = {The {{Topography}} of {{Human-Computer Interaction}}},
+  booktitle = {Adjunct Proceedings of the Sixth Decennial {{Aarhus}} Conference: {{Computing X Crisis}} ({{AAR Adjunct}} 2025)},
+  author = {Dalsgaard, Tor-Salve and Cerna, Katerina},
+  year = {2025},
+  month = aug,
+  pages = {1--2},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  doi = {10.1145/3737609.3747105},
+  isbn = {979-8-4007-1968-4},
+  langid = {english}
+}
 ```
 
-## 🔗 Links
+## Links
 
 - **Main Website**: [https://topography-of-hci.dk/](https://topography-of-hci.dk/)
 - **GitHub Repository**: [https://github.com/TorSalve/topography-of-hci](https://github.com/TorSalve/topography-of-hci) - Download models and source code
@@ -79,7 +92,7 @@ If you use this work in your research or create your own topography, please cite
 - **Methodology**: [https://topography-of-hci.dk/method/](https://topography-of-hci.dk/method/)
 - **Browse Topographies**: [https://topography-of-hci.dk/topographies/](https://topography-of-hci.dk/topographies/)
 
-## 📧 Contact
+## Contact
 
 For questions, collaborations, or to share your own topography, visit our [about page](https://topography-of-hci.dk/about/).
 
