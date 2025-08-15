@@ -2,17 +2,17 @@
 
 This directory contains 3D models, contour maps, and related assets from the Topography of Human-Computer Interaction project.
 
-## 📄 License
+## License
 
 All content in this directory is released under **CC0 1.0 Universal (Public Domain)**.
 
 This means you can:
-- ✅ Use the models for any purpose (research, education, commercial)
-- ✅ Modify and adapt the data
-- ✅ Redistribute without restrictions
-- ✅ No attribution required (though appreciated!)
+- Use the models for any purpose (research, education, commercial)
+- Modify and adapt the data
+- Redistribute without restrictions
+- No attribution required (though appreciated!)
 
-## 📦 What's Included
+## What's Included
 
 *This directory is currently being populated with content from recent events.*
 
@@ -23,7 +23,7 @@ When complete, you'll find:
 - **Source Files**: Original scan data and processing files
 - **Documentation**: Instructions for reusing and adapting the models
 
-## 🔬 For Researchers
+## For Researchers
 
 Feel free to use these models in your research, publications, and educational materials. While attribution is not required under CC0, we appreciate citations to help others discover the project.
 
@@ -45,6 +45,6 @@ Dalsgaard, T.-S., & Cerna, K. (2025). The Topography of Human-Computer Interacti
 }
 ```
 
-## 📧 Contribute
+## Contribute
 
 Have models from your own topography event? We'd love to include them! Contact us through the main website: https://topography-of-hci.dk/about/
