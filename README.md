@@ -19,7 +19,6 @@ The **Topography of Human-Computer Interaction** is an innovative project that c
 topography-of-hci/
 ├── docs/                    # 🌐 Website source (Jekyll-based)
 ├── models/                  # 📦 Downloadable 3D models and assets
-├── topography-builder/      # 🚧 3D processing tool (Under Development)
 └── README.md                # 📖 This file
 ```
 
@@ -33,24 +32,7 @@ The `/models` folder contains 3D models, contour maps, and related assets that y
 
 *Note: The models folder is currently being populated with content.*
 
-## 🚧 Topography Builder (Under Development)
-
-The `topography-builder` directory contains a web application for converting 3D scan files into topographical maps. This tool is currently **under development**.
-
-### Current Features:
-- Multiple 3D file format support (OBJ, FBX, STL, PLY)
-- Blender and Trimesh processing engines
-- Web-based drag & drop interface
-- Real-time processing feedback
-- RESTful API for integration
-
-### Planned Features:
-- Enhanced SVG map editor
-- Advanced topographical analysis
-- Collaborative editing capabilities
-- Integration with the main website
-
-For detailed information about the topography builder, see [`topography-builder/README.md`](topography-builder/README.md).
+...existing code...
 
 ## 🎯 How It Works
 
@@ -64,20 +46,17 @@ For detailed information about the topography builder, see [`topography-builder/
 ### Create Your Own Topography
 Want to recreate this experience in your community? You can:
 - Download our materials and instructions from the website or [directly from GitHub](https://github.com/TorSalve/topography-of-hci)
-- Use the topography builder tool to process your own 3D scans
 - Share your results with the community
 
 ### Contribute to Development
 - **Website**: Submit improvements to the Jekyll site in `/docs`
 - **Models**: Contribute new topography models to `/models`
-- **Builder Tool**: Help develop the processing application in `/topography-builder`
 
 ## 📄 License
 
 This project uses different licenses for different components:
 
 - **Models & Data** (`/models`): [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) - No rights reserved, freely usable for any purpose
-- **Topography Builder** (`/topography-builder`): [MIT License](https://opensource.org/licenses/MIT) - Open source software license encouraging reuse and contribution
 - **Website Content** (`/docs`): [Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/) - Free to use with attribution
 
 This approach ensures that:

@@ -27,10 +27,6 @@ When complete, you'll find:
 
 Feel free to use these models in your research, publications, and educational materials. While attribution is not required under CC0, we appreciate citations to help others discover the project.
 
-## 🛠️ Processing Your Own Models
-
-If you create your own topography and want to process 3D scans, check out the `topography-builder` tool in the parent directory.
-
 ## 📧 Contribute
 
 Have models from your own topography event? We'd love to include them! Contact us through the main website: https://topography-of-hci.dk/contact/
