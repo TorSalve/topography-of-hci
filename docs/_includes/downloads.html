@@ -1,42 +1,42 @@
-<div class="strip strip-grey">
-  <div class="intro intro-small">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <h2 class="title">Downloads the topography</h2>
+<!-- <div class="strip strip-grey"> -->
+<!-- <div class="intro intro-small"> -->
+<div class="container mb-5">
+  <div class="row">
+    <div class="col-md-12">
+      <h2 class="title">Download the Topography</h2>
+    </div>
+    <p>
+      The Topography of Human-Computer Interaction (HCI) is available for
+      download in various versions and formats. All files are hosted on GitHub
+      as open-access resources under a CC0 license.
+    </p>
+    {% for topography in site.topographies %}
+    <div class="col-md-4 col-sm-12">
+      <div class="card topography-card">
+        <img
+          class="card-img-top"
+          src="{{ topography.image | relative_url | default: site.logo.mobile | relative_url }}"
+          alt="Image of {{ topography.title }}"
+        />
+        <div class="card-header">
+          <h3 class="card-title">{{ topography.title }}</h3>
         </div>
-        <p>
-          The topography of HCI is available for download in various versions
-          and formats. The topography is available on GitHub, with a CC0
-          lisence.
-        </p>
-        {% for topography in site.topographies %}
-        <div class="col-md-4 col-sm-12">
-          <div class="card topography-card">
-            <img
-              class="card-img-top"
-              src="{{ topography.image | relative_url | default: site.logo.mobile | relative_url }}"
-              alt="Image of {{ topography.title }}"
-            />
-            <div class="card-header">
-              <h3 class="card-title">{{ topography.title }}</h3>
-            </div>
-            <div class="card-body">
-              <p class="card-text">
-                {{ topography.excerpt | markdownify | strip_html | truncate: 100
-                }}
-              </p>
-              <a
-                href="{{ topography.github | default: topography.url }}"
-                class="stretched-link"
-                target="_blank"
-                rel="noopener noreferrer"
-              ></a>
-            </div>
-          </div>
+        <div class="card-body">
+          <p class="card-text">
+            {{ topography.excerpt | markdownify | strip_html | truncate: 100 }}
+          </p>
+          <a
+            href="{{ topography.github | default: topography.url }}"
+            class="stretched-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          ></a>
         </div>
-        {% endfor %}
       </div>
     </div>
+    {% endfor %}
   </div>
 </div>
+<!-- </div>
+  </div>
+</div> -->

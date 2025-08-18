@@ -111,6 +111,11 @@ body {
   font-size: 16px;
   line-height: 1.2;
   font-family: $font-family-base;
+  // background-color: $primary;
+  background-image: url("../../images/topography_background.svg");
+  // background-repeat: no-repeat;
+  // background-size: cover;
+  // background-position: center;
   @include media-breakpoint-up(md) {
     font-size: 16px;
     line-height: 1.3;

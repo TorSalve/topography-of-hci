@@ -6,14 +6,14 @@ intro_image_absolute: true
 intro_image_hide_on_mobile: true
 ---
 
-# How We Created the Topography
+# Method
 
-**The Topography of Human-Computer Interaction** is more than a metaphor — it’s a physical and digital representation of the many peaks, valleys, and connections that make up the HCI community. At its heart, the topography is built collaboratively.
+**The Topography of Human-Computer Interaction (HCI)** is more than a metaphor — it’s a physical and digital representation of the many peaks, valleys, and connections that make up the HCI community. At its heart, the topography is built collaboratively.
 
 At the Aarhus 2025 conference, participants were invited to add a piece of modeling clay to a shared table. Each piece represents their own area of expertise, research method, or perspective within HCI.
 
 Over time, the clay pieces merge into a collective landscape:
-- **Peaks** represent areas of strength, activity, or specialisation.
+- **Peaks** represent areas of strength, activity, or specialization.
 - **Valleys** reveal common ground, overlaps, or underexplored connections.
 
 Participants could mark their clay with **small flags** to label methods, theories, or ideas — turning the sculpture into a conversation piece and map at the same time.
@@ -22,7 +22,7 @@ To make this evolving landscape accessible after the conference, we regularly ca
 - **3D digital model** — preserving the shape in detail
 - **Contour map** — highlighting elevations and patterns
 
-All models were cleaned up and shared on this website under an open license, so others can view, download, and reuse them.
+All models were cleaned up and shared on this website as open-access files under a CC0 license, so others can view, download, and reuse them.
 
 ## Why This Matters
 
@@ -42,4 +42,4 @@ Here is what we used:
 - An optional **3D scanning app** (like [Scandiverse](https://scaniverse.com/), Polycam, or any phone-based LiDAR scanner)
 
 
-We’d love to hear about your version — please share your topography with us!
+We’d love to hear about your version—please share your topography with us!
