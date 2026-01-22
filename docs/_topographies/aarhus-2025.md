@@ -1,6 +1,6 @@
 ---
 title: Aarhus 2025
-weight: 1
+weight: 2
 github: https://github.com/TorSalve/topography-of-hci/tree/main/models/aarhus25
 image: "images/topography/aarhus-2025.png"
 ---
