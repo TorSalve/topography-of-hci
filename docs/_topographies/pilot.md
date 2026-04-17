@@ -1,6 +1,6 @@
 ---
 title: Pilot model
-weight: 3
+weight: 4
 github: https://github.com/TorSalve/topography-of-hci/tree/main/models/pilot
 image: "images/topography/topography@4x.png"
 ---

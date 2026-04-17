@@ -1,6 +1,6 @@
 ---
 title: Halmstad - Lunch and Learn
-weight: 1
+weight: 3
 github: https://github.com/TorSalve/topography-of-hci/tree/main/models/halmstad-lls 
 image: "images/topography/halmstad-lls.jpg"
 ---

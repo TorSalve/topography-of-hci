@@ -15,11 +15,13 @@ bodyClass: "page-home"
           <a href="{{ "topographies" | relative_url }}" class="button">Download the topography here</a>
         </div>
       </div>
-      {% if page.intro_image %}
       <div class="col-12 col-md-5 col-lg-6 order-1 order-md-2 position-relative">
-        <img alt="{{ page.title }}" class="intro-image{% if page.intro_image_absolute %} intro-image-absolute{% endif %}{% if page.intro_image_hide_on_mobile %} intro-image-hide-mobile{% endif %}" src="{{ page.intro_image | relURL }}" />
+        <div style="overflow: hidden; border-radius: 8px; width: 100%; aspect-ratio: 1/1;">
+          <video autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover; display: block; border: none;">
+            <source src="https://raw.githubusercontent.com/TorSalve/topography-of-hci/main/models/chi26/CHI - topography 1 - small.mp4" type="video/mp4" />
+          </video>
+        </div>
       </div>
-      {% endif %}
     </div>
 
     
